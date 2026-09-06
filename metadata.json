@@ -1,0 +1,11 @@
+{
+  "name": "BhashaSetu F.1",
+  "description": "AI-Powered Vernacular Pedagogy for Mother Tongue-Based Primary Education in Ho, Mundari, and Santhali",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

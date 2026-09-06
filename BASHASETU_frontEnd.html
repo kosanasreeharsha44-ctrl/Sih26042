@@ -1,0 +1,2564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BhashaSetu — AI-Powered Vernacular Pedagogy | Mother Tongue-Based Primary Education</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page: #F5F7F6;
+    --card: #FFFFFF;
+    --ink: #1B211E;
+    --ink-soft: #64748B;
+    --ink-faint: #94A3B8;
+    --border: #E8ECE9;
+    --border-light: #F1F4F2;
+
+    --green: #1E8E52;
+    --green-dark: #13693C;
+    --green-bg: #EAF6EE;
+    --purple: #7C5CFC;
+    --purple-bg: #F2EEFF;
+    --blue: #2563EB;
+    --blue-bg: #EFF6FF;
+    --orange: #F59E0B;
+    --orange-bg: #FEF3C7;
+    --red: #E11D48;
+
+    --font-display: 'Poppins', 'Inter', sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --r-s: 8px;
+    --r-m: 14px;
+    --r-l: 20px;
+    --shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 14px rgba(15, 23, 42, 0.03);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+  select, textarea, input { font-family: inherit; }
+  a { text-decoration: none; color: inherit; }
+  img, svg { display: block; }
+  :focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+  .icon {
+    width: 17px; height: 17px;
+    stroke: currentColor; fill: none;
+    stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+  }
+
+  /* ===================== APP SHELL ===================== */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 245px 1fr 280px;
+    min-height: 100vh;
+  }
+  .app-shell.detail-mode {
+    grid-template-columns: 245px 1fr;
+  }
+  .app-shell.detail-mode .right-sidebar {
+    display: none;
+  }
+
+  @media (max-width: 1200px) {
+    .app-shell { grid-template-columns: 230px 1fr; }
+    .right-sidebar { display: none; }
+  }
+  @media (max-width: 860px) {
+    .app-shell { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  /* ===================== LEFT SIDEBAR ===================== */
+  .sidebar {
+    background: var(--card);
+    border-right: 1px solid var(--border);
+    padding: 18px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px 4px 18px;
+    cursor: pointer;
+  }
+  .brand-logo-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 2px;
+    border: 1px solid var(--border-light);
+  }
+  .brand-logo-icon svg { width: 100%; height: 100%; border-radius: 10px; }
+  .brand-title {
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+    font-weight: 800;
+    color: #121858;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+    display: flex;
+    align-items: center;
+  }
+  .brand-title .setu-gradient {
+    background: linear-gradient(115deg, #06B6D4 0%, #10B981 35%, #F97316 70%, #A855F7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+  .brand-title .signal-accent {
+    width: 9px; height: 9px;
+    vertical-align: super;
+    margin-left: -2px;
+  }
+  .brand-sub {
+    font-size: 0.67rem;
+    font-weight: 600;
+    color: var(--green-dark);
+    line-height: 1.25;
+    margin-top: 3px;
+  }
+  .brand-gov {
+    font-size: 0.65rem;
+    color: var(--ink-soft);
+    line-height: 1.2;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 9px 12px;
+    border-radius: var(--r-s);
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    position: relative;
+  }
+  .nav-link .icon { color: var(--ink-faint); }
+  .nav-link:hover { background: #F1F4F2; color: var(--ink); }
+  .nav-link.active {
+    background: var(--green);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .nav-link.active .icon { color: #FFFFFF; }
+
+  .badge-new {
+    margin-left: auto;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #DCFCE7;
+    color: #15803D;
+  }
+  .nav-link.active .badge-new {
+    background: rgba(255,255,255,0.25);
+    color: #fff;
+  }
+
+  .side-promo-box {
+    margin-top: 14px;
+    background: #EDF7F1;
+    border-radius: var(--r-m);
+    padding: 14px 12px;
+    border: 1px solid #E0F0E6;
+  }
+  .side-promo-box h5 {
+    font-family: var(--font-display);
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #13693C;
+    line-height: 1.35;
+  }
+  .side-promo-art {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .side-promo-art svg {
+    width: 100%;
+    max-width: 148px;
+    border-radius: 8px;
+    height: auto;
+  }
+
+  /* ===================== TOPBAR ===================== */
+  .main-column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar-left h1 {
+    font-size: 1.22rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink);
+  }
+  .topbar-left p {
+    font-size: 0.81rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .btn-topbar-back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .btn-topbar-back:hover { background: #F1F4F2; }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .btn-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 13px;
+    background: var(--card);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .btn-chip:hover { background: #F8FAF9; border-color: #CBD5E1; }
+
+  .user-status-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 12px 4px 5px;
+    background: var(--card);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .user-status-chip:hover { background: #F4F7F5; border-color: #CBD5E1; }
+  .user-avatar {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: #DCFCE7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .user-avatar.student-av { background: #E0E7FF; }
+  .user-avatar svg { width: 14px; height: 14px; stroke: #12693C; fill: none; stroke-width: 2; }
+  .user-avatar.student-av svg { stroke: #3730A3; }
+
+  .btn-login-small {
+    padding: 5px 15px;
+    background: var(--green);
+    color: #fff;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn-login-small:hover { background: var(--green-dark); }
+
+  .btn-icon-circle {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    position: relative;
+    cursor: pointer;
+  }
+  .btn-icon-circle .badge-dot {
+    position: absolute;
+    top: 8px; right: 9px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    border: 1px solid var(--card);
+  }
+
+  /* ===================== DASHBOARD HOME VIEW ===================== */
+  .dashboard-content {
+    padding: 22px 28px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  /* Hero banner prominently displaying WHY this project is needed */
+  .hero-banner {
+    background: linear-gradient(125deg, #E9F7EF 0%, #F1FBF4 60%, #F7FCF9 100%);
+    border-radius: var(--r-l);
+    border: 1px solid #E1EFE5;
+    padding: 26px 32px;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    align-items: center;
+    gap: 18px;
+    overflow: hidden;
+  }
+  @media (max-width: 760px) {
+    .hero-banner { grid-template-columns: 1fr; padding: 22px 20px; }
+  }
+  .hero-banner h2 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .hero-banner p {
+    margin-top: 8px;
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    max-width: 38ch;
+  }
+  .hero-art svg {
+    width: 100%;
+    max-width: 290px;
+    height: auto;
+  }
+
+  /* Metrics 4 Grid */
+  .metrics-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 760px) {
+    .metrics-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+  .metric-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-m);
+    padding: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .metric-icon-circle {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .metric-icon-circle.b { background: #EFF6FF; color: #2563EB; }
+  .metric-icon-circle.g { background: #EAF6EE; color: #16A34A; }
+  .metric-icon-circle.o { background: #FEF3C7; color: #D97706; }
+  .metric-icon-circle.p { background: #F3E8FF; color: #9333EA; }
+  .metric-info { flex: 1; min-width: 0; }
+  .metric-label { font-size: 0.76rem; color: var(--ink-soft); font-weight: 500; }
+  .metric-value { font-size: 1.4rem; font-weight: 700; color: var(--ink); margin: 2px 0; }
+  .metric-sub { font-size: 0.69rem; color: var(--ink-faint); display: flex; align-items: center; gap: 4px; }
+
+  /* AI Teaching Assistant Pipeline Card */
+  .ai-pipeline-card {
+    background: linear-gradient(135deg, #FFFFFF 0%, #F9FCFA 100%);
+    border: 1px solid #D1EADE;
+    border-radius: var(--r-l);
+    padding: 22px 24px;
+    box-shadow: 0 4px 16px rgba(30,142,82,0.04);
+  }
+  .ai-pipeline-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .ai-pipeline-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ai-pipeline-title-wrap h3 { font-size: 1.12rem; font-weight: 700; color: var(--ink); }
+  .ai-pipeline-steps-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+    gap: 8px;
+    align-items: center;
+    margin: 18px 0 20px;
+  }
+  @media (max-width: 800px) {
+    .ai-pipeline-steps-grid { grid-template-columns: 1fr; }
+    .pipeline-arrow { display: none; }
+  }
+  .pipeline-step-box {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--r-s);
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  }
+  .pipeline-step-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+  }
+  .pipeline-step-box h5 { font-size: 0.8rem; font-weight: 600; color: var(--ink); }
+  .pipeline-step-box p { font-size: 0.69rem; color: var(--ink-soft); margin-top: 2px; }
+  .pipeline-arrow {
+    color: var(--ink-faint);
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+  .ai-pipeline-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn-create-lesson-ai {
+    background: var(--green);
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 11px 22px;
+    border-radius: var(--r-s);
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 3px 10px rgba(30,142,82,0.25);
+  }
+  .btn-create-lesson-ai:hover { background: var(--green-dark); }
+  .btn-outline-action {
+    background: #FFFFFF;
+    color: var(--ink);
+    border: 1px solid var(--border);
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: var(--r-s);
+    font-size: 0.86rem;
+  }
+  .btn-outline-action:hover { background: #F8FAF9; }
+
+  /* Quick Actions (3 Cards) */
+  .quick-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 760px) {
+    .quick-actions { grid-template-columns: 1fr; }
+  }
+  .qa-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-m);
+    padding: 20px 18px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 130px;
+  }
+  .qa-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .qa-card.green { background: #EBF8F0; border-color: #D6EFE0; }
+  .qa-card.purple { background: #F3EFFF; border-color: #E2DAFF; }
+  .qa-card.blue { background: #EFF6FF; border-color: #DBEAFE; }
+
+  .qa-top-row { display: flex; align-items: center; gap: 12px; }
+  .qa-icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .qa-card.green .qa-icon-wrap { background: #CFEEDC; color: var(--green-dark); }
+  .qa-card.purple .qa-icon-wrap { background: #DFD7FF; color: var(--purple); }
+  .qa-card.blue .qa-icon-wrap { background: #D6E8FE; color: var(--blue); }
+  .qa-title { font-family: var(--font-display); font-size: 0.98rem; font-weight: 600; color: var(--ink); }
+  .qa-bottom-row { display: flex; align-items: flex-end; justify-content: space-between; margin-top: 14px; gap: 10px; }
+  .qa-desc { font-size: 0.8rem; color: var(--ink-soft); line-height: 1.35; max-width: 24ch; }
+  .qa-arrow-btn {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    flex-shrink: 0;
+  }
+
+  /* Recent Lessons section */
+  .section-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-l);
+    padding: 20px 22px;
+  }
+  .section-header-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .section-header-line h3 { font-size: 1.05rem; font-weight: 600; }
+  .link-view-all { font-size: 0.82rem; font-weight: 600; color: var(--green-dark); cursor: pointer; }
+
+  .lesson-row-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .lesson-row-card:last-child { border-bottom: none; }
+  .lesson-thumb-art {
+    width: 68px; height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .lesson-meta-wrap { flex: 1; min-width: 0; }
+  .lesson-heading { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+  .lesson-pill-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-top: 2px;
+  }
+  .lesson-sub-meta { font-size: 0.74rem; color: var(--ink-faint); margin-top: 2px; }
+  .lesson-status-side {
+    text-align: right;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .status-pill-green {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--green-bg);
+    color: var(--green-dark);
+  }
+  .time-text { font-size: 0.72rem; color: var(--ink-faint); margin-top: 3px; }
+
+  /* Student progress overview horizontal bars */
+  .progress-card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 10px;
+  }
+  @media (max-width: 760px) {
+    .progress-card-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .progress-stat-card {
+    background: #FAFBFB;
+    border: 1px solid var(--border);
+    border-radius: var(--r-m);
+    padding: 14px 16px;
+  }
+  .progress-stat-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .progress-stat-title { font-size: 0.82rem; font-weight: 600; color: var(--ink); }
+  .progress-stat-pct { font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+  .progress-track-bar {
+    width: 100%; height: 6px;
+    border-radius: 99px;
+    background: #E2E8F0;
+    overflow: hidden;
+  }
+  .progress-bar-inner { height: 100%; border-radius: 99px; }
+
+  /* Problem We Solve vs Solution Banner */
+  .problem-solution-banner {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: var(--r-l);
+    padding: 16px 22px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 18px;
+    align-items: center;
+  }
+  @media (max-width: 760px) {
+    .problem-solution-banner { grid-template-columns: 1fr; }
+  }
+  .ps-col h5 { font-size: 0.82rem; font-weight: 700; color: #B45309; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ps-col p { font-size: 0.82rem; color: #78350F; margin-top: 3px; line-height: 1.4; }
+  .ps-col.solution h5 { color: #15803D; }
+  .ps-col.solution p { color: #14532D; }
+
+  /* ===================== RIGHT SIDEBAR ===================== */
+  .right-sidebar {
+    background: var(--page);
+    padding: 20px 18px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-left: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .rs-card-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-l);
+    padding: 18px;
+  }
+  .rs-card-box h4 { font-size: 0.96rem; font-weight: 600; margin-bottom: 12px; }
+
+  .lp-select-group { margin-bottom: 8px; }
+  .lp-select-input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-s);
+    background: #FAFBFB;
+    color: var(--ink);
+    font-size: 0.88rem;
+    font-weight: 500;
+  }
+  .lp-swap-center { display: flex; justify-content: center; margin: 4px 0 8px; }
+  .btn-swap-mini {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    background: var(--card);
+    cursor: pointer;
+  }
+  .btn-solid-green {
+    width: 100%;
+    padding: 11px 16px;
+    background: var(--green);
+    color: #fff;
+    border-radius: var(--r-s);
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-top: 8px;
+    text-align: center;
+  }
+  .btn-solid-green:hover { background: var(--green-dark); }
+
+  .quick-tool-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 8px;
+    border-radius: var(--r-s);
+    color: var(--ink);
+    transition: background 0.15s ease;
+    cursor: pointer;
+  }
+  .quick-tool-link:hover { background: #F1F4F2; }
+  .tool-icon-box {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: #EAF6EE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--green-dark);
+    flex-shrink: 0;
+  }
+  .quick-tool-link span { font-size: 0.86rem; font-weight: 500; }
+
+  /* Recent Activity in Right Sidebar */
+  .recent-activity-sidebar-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .recent-activity-sidebar-item:last-child { border-bottom: none; }
+  .activity-dot-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--ink-soft);
+  }
+  .activity-meta-line { flex: 1; min-width: 0; }
+  .activity-title-txt { font-size: 0.79rem; font-weight: 500; color: var(--ink); line-height: 1.35; }
+  .activity-time-stamp { font-size: 0.69rem; color: var(--ink-faint); margin-top: 2px; }
+
+  /* ===================== VIEW CONTAINERS ===================== */
+  .module-view-container { display: none; padding: 24px 32px 48px; }
+  .module-view-container.active-view { display: block; }
+  .tool-page-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--r-l);
+    padding: 24px 28px;
+    box-shadow: var(--shadow);
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+
+  /* Filter pills row */
+  .filter-pills-row {
+    display: flex;
+    gap: 8px;
+    margin: 14px 0 18px;
+    flex-wrap: wrap;
+  }
+  .filter-pill-tab {
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: #F1F4F2;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter-pill-tab:hover { background: #E2E8F0; color: var(--ink); }
+  .filter-pill-tab.active {
+    background: var(--green);
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+
+  /* AI Generator styles */
+  .generator-split-grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 24px;
+    margin-top: 18px;
+  }
+  @media (max-width: 900px) { .generator-split-grid { grid-template-columns: 1fr; } }
+  .generator-input-pane, .generator-output-pane {
+    background: #FAFBFB;
+    border: 1px solid var(--border);
+    border-radius: var(--r-m);
+    padding: 20px;
+  }
+  .form-row-field { margin-bottom: 14px; }
+  .form-row-field label {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  .input-form-elem {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-s);
+    background: #FFFFFF;
+    font-size: 0.88rem;
+  }
+
+  /* Audio player */
+  .audio-player-mock {
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .play-circle-green {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .audio-progress-track {
+    flex: 1;
+    height: 4px;
+    background: #E2E8F0;
+    border-radius: 99px;
+    position: relative;
+  }
+  .audio-progress-track::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 25%;
+    background: var(--green);
+    border-radius: 99px;
+  }
+
+  /* Student Portal */
+  .student-portal-container {
+    max-width: 580px;
+    margin: 0 auto;
+    background: #FFFFFF;
+    border: 1px solid var(--border);
+    border-radius: var(--r-l);
+    box-shadow: var(--shadow);
+    padding: 24px;
+  }
+  .student-hero-lesson {
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border-radius: var(--r-m);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 16px 0 20px;
+  }
+  .student-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .student-action-card {
+    background: #FAFBFB;
+    border: 1px solid var(--border);
+    border-radius: var(--r-m);
+    padding: 16px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .student-action-card:hover { background: #F1F5F9; border-color: #CBD5E1; }
+
+  /* Student Performance Table */
+  .performance-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 18px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--r-m);
+  }
+  table.progress-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  table.progress-data-table th {
+    background: #F8FAF9;
+    padding: 11px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border-bottom: 1px solid var(--border);
+  }
+  table.progress-data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--ink);
+  }
+  table.progress-data-table tr:last-child td { border-bottom: none; }
+  .ai-tag-recommend {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #EBF7EE;
+    color: var(--green-dark);
+    display: inline-block;
+  }
+  .ai-class-recommendation-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: var(--r-m);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  /* Quick Tools styles */
+  .dual-box-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 760px) { .dual-box-grid { grid-template-columns: 1fr; } }
+  .editor-box {
+    border: 1px solid var(--border);
+    border-radius: var(--r-s);
+    background: #FAFBFB;
+    padding: 14px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .editor-box textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    resize: none;
+    font-size: 0.92rem;
+    color: var(--ink);
+    min-height: 70px;
+  }
+  .editor-box textarea:focus { outline: none; }
+  .box-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+  }
+
+  /* Resources 6-grid */
+  .resource-6-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  @media (max-width: 650px) { .resource-6-grid { grid-template-columns: repeat(2, 1fr); } }
+  .resource-item-card {
+    border: 1px solid var(--border-light);
+    border-radius: var(--r-m);
+    padding: 18px 12px;
+    text-align: center;
+    background: #FAFCFA;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .resource-item-card:hover {
+    border-color: var(--border);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  /* Settings list */
+  .settings-stack-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .setting-item-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: var(--r-s);
+    background: #FAFBFB;
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .setting-item-line:hover { background: #F1F4F2; }
+
+  /* Login modal */
+  .login-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .login-modal-card {
+    background: #FFFFFF;
+    border-radius: var(--r-l);
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+    padding: 30px 32px 28px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .btn-close-login-modal {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .login-role-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 2px solid var(--border-light);
+    margin: 18px 0 20px;
+  }
+  .role-tab-btn {
+    padding: 10px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .role-tab-btn.active { color: var(--green-dark); }
+  .role-tab-btn.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0; right: 0;
+    height: 2px;
+    background: var(--green);
+  }
+
+  /* AI Tutor FAB */
+  .ai-tutor-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    color: #FFFFFF;
+    border-radius: 999px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 18px rgba(16,185,129,0.38);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    z-index: 99;
+    cursor: pointer;
+  }
+  .ai-tutor-fab:hover { transform: translateY(-2px); }
+
+  .ai-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.45);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .ai-modal-card {
+    background: #FFFFFF;
+    border-radius: var(--r-l);
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+  }
+  .ai-modal-header {
+    background: linear-gradient(135deg, #047857 0%, #10B981 100%);
+    color: #fff;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ai-chat-body {
+    padding: 18px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ai-chat-bubble {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.84rem;
+    max-width: 85%;
+    line-height: 1.4;
+  }
+  .ai-chat-bubble.bot { background: #F1F5F9; color: var(--ink); align-self: flex-start; }
+  .ai-chat-bubble.user { background: var(--green); color: #fff; align-self: flex-end; }
+  .ai-chat-input-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-light);
+  }
+  .ai-chat-input-bar input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell" id="app-shell">
+
+  <!-- ===================== LEFT SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <div class="brand" data-view="dashboard">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 100 100" fill="none">
+          <defs>
+            <linearGradient id="bookLeftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#06B6D4"/><stop offset="100%" stop-color="#0284C7"/>
+            </linearGradient>
+            <linearGradient id="bookRightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FB923C"/><stop offset="100%" stop-color="#EA580C"/>
+            </linearGradient>
+            <linearGradient id="speechBubbleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#D946EF"/>
+            </linearGradient>
+          </defs>
+          <circle cx="50" cy="22" r="16" fill="url(#speechBubbleGrad)"/>
+          <path d="M44 34L50 38L52 34H44Z" fill="#7C3AED"/>
+          <text x="50" y="27" font-family="'Poppins', sans-serif" font-weight="700" font-size="16" fill="#FFFFFF" text-anchor="middle">अ</text>
+          <circle cx="34" cy="38" r="8" fill="#FCD34D"/>
+          <path d="M26 36C26 32 30 28 34 28C38 28 42 32 42 36V40H26V36Z" fill="#1E293B"/>
+          <circle cx="66" cy="38" r="8" fill="#FCD34D"/>
+          <path d="M58 35C58 31 62 28 66 28C70 28 74 31 74 35V39H58V35Z" fill="#1E293B"/>
+          <path d="M16 52C28 48 42 52 50 58V78C42 72 28 68 16 72V52Z" fill="url(#bookLeftGrad)"/>
+          <text x="32" y="68" font-family="'Poppins', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">అ</text>
+          <path d="M84 52C72 48 58 52 50 58V78C58 72 72 68 84 72V52Z" fill="url(#bookRightGrad)"/>
+          <text x="68" y="68" font-family="'Poppins', sans-serif" font-weight="800" font-size="15" fill="#FFFFFF" text-anchor="middle">A</text>
+          <path d="M50 58V50" stroke="#16A34A" stroke-width="2.5" stroke-linecap="round"/>
+          <ellipse cx="46" cy="49" rx="3.5" ry="2" fill="#22C55E" transform="rotate(-30 46 49)"/>
+          <ellipse cx="54" cy="49" rx="3.5" ry="2" fill="#22C55E" transform="rotate(30 54 49)"/>
+          <circle cx="50" cy="46" r="2" fill="#F59E0B"/>
+        </svg>
+      </div>
+
+      <div>
+        <div class="brand-title">
+          Bhasha<span class="setu-gradient">Setu</span>
+          <svg class="signal-accent" viewBox="0 0 16 16" fill="none">
+            <path d="M3 4C6.5 1.5 9.5 1.5 13 4" stroke="#9333EA" stroke-width="2" stroke-linecap="round"/>
+            <path d="M5 8C7.5 6 8.5 6 11 8" stroke="#9333EA" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-sub">AI-Powered Pedagogy</div>
+        <div class="brand-gov">Mother Tongue Education</div>
+      </div>
+    </div>
+
+    <nav class="nav-list" aria-label="Primary Navigation">
+      <a class="nav-link active" data-view="dashboard">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        Dashboard
+      </a>
+
+      <a class="nav-link" data-view="ai-generator">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span>AI Lesson Generator</span>
+        <span class="badge-new">New</span>
+      </a>
+
+      <a class="nav-link" data-view="tool-text">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M5 8h9M9 5v3c0 4-2 7-6 8.5M9 12c1.5 2 3.5 3.3 6 3.8"/><path d="M14 20l4-9 4 9M15.3 17h5.4"/></svg>
+        Translate Content
+      </a>
+      <a class="nav-link" data-view="tool-voice">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4v5a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 11a6 6 0 0 0 12 0M12 19v3"/></svg>
+        Voice Conversation
+      </a>
+      <a class="nav-link" data-view="lessons">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Lessons
+      </a>
+      <a class="nav-link" data-view="worksheets">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Worksheets
+      </a>
+      <a class="nav-link" data-view="assessments">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Assignments
+      </a>
+      <a class="nav-link" data-view="progress">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l3-4 3 3 5-7"/></svg>
+        Student Progress
+      </a>
+      <a class="nav-link" data-view="resources">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M9 20V9"/></svg>
+        Resources
+      </a>
+      <a class="nav-link" data-view="settings">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.04 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1.04-1.56V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9a1.7 1.7 0 0 0 1.56 1.04H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1.04z"/></svg>
+        Settings
+      </a>
+    </nav>
+
+    <!-- Mother Tongue Promo Box -->
+    <div class="side-promo-box">
+      <h5>Mother Tongue<br>Stronger Learning<br>Brighter Future</h5>
+      <div class="side-promo-art">
+        <svg viewBox="0 0 180 140" style="width:100%;max-width:148px;height:auto;border-radius:8px;" fill="none">
+          <rect width="180" height="140" rx="10" fill="#EBF7EE"/>
+          <ellipse cx="90" cy="128" rx="80" ry="10" fill="#D1EADE"/>
+          <circle cx="88" cy="56" r="14" fill="#1C1917"/>
+          <ellipse cx="88" cy="58" rx="10.5" ry="11" fill="#FBBF24"/>
+          <path d="M78 54C78 48 83 44 88 44C93 44 98 48 98 54V57H78V54Z" fill="#1C1917"/>
+          <path d="M68 86C68 72 76 68 88 68C100 68 108 72 108 86V126H68V86Z" fill="#1E8E52"/>
+          <ellipse cx="50" cy="80" rx="9" ry="10" fill="#FBBF24"/>
+          <path d="M36 102C36 94 42 90 50 90C58 90 64 94 64 102V126H36V102Z" fill="#F59E0B"/>
+          <ellipse cx="126" cy="80" rx="9" ry="10" fill="#FBBF24"/>
+          <path d="M112 102C112 94 118 90 126 90C134 90 140 94 140 102V126H112V102Z" fill="#7C5CFC"/>
+          <path d="M62 102C74 97 84 100 88 104C92 100 102 97 114 102V122C102 117 92 120 88 124C84 120 74 117 62 122V102Z" fill="#FFFFFF"/>
+        </svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN COLUMN ===================== -->
+  <div class="main-column">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="btn-topbar-back" id="btn-topbar-back" style="display:none;" title="Back to Dashboard">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        </button>
+        <div>
+          <!-- Greeting: Hello, Teacher! or Hello, Student! -->
+          <h1 id="topbar-title">Hello, Teacher! <span aria-hidden="true">👋</span></h1>
+          <p id="topbar-desc">Here's what's happening in your class today.</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="btn-chip" role="button" tabindex="0">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+          English
+          <svg class="icon" style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+
+        <button class="btn-icon-circle" aria-label="Notifications">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6z"/><path d="M9.5 20a2.5 2.5 0 0 0 5 0"/></svg>
+          <span class="badge-dot"></span>
+        </button>
+
+        <div class="user-status-chip" id="user-status-chip" title="Click to Switch User">
+          <div class="user-avatar" id="topbar-avatar">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+          </div>
+          <span id="topbar-role-text" style="font-weight:600;font-size:0.83rem;">Teacher</span>
+        </div>
+
+        <button class="btn-login-small" id="btn-open-login" title="Login / Switch">
+          Login
+        </button>
+      </div>
+    </header>
+
+    <!-- ===================== 1. DASHBOARD HOME VIEW ===================== -->
+    <div class="dashboard-content" id="view-dashboard">
+
+      <!-- PROMINENT HERO BANNER: Displaying why we need this project -->
+      <section class="hero-banner">
+        <div>
+          <h2>Teach in their language.<br>They learn better.</h2>
+          <p id="hero-role-desc">AI-powered translation and tools for Ho, Mundari &amp; Santhali classrooms.</p>
+        </div>
+        <div class="hero-art">
+          <svg viewBox="0 0 320 180" style="width:100%;max-width:290px;height:auto;" fill="none">
+            <ellipse cx="160" cy="155" rx="145" ry="18" fill="#D6F0E0"/>
+            <!-- Teacher -->
+            <circle cx="82" cy="54" r="15" fill="#1C1917"/>
+            <ellipse cx="82" cy="56" rx="13" ry="14" fill="#FBBF24"/>
+            <path d="M69 50C69 42 75 36 82 36C89 36 95 42 95 50V54H69V50Z" fill="#1C1917"/>
+            <rect x="73" y="52" width="7" height="6" rx="1.5" stroke="#1E293B" stroke-width="1.2" fill="none"/>
+            <rect x="84" y="52" width="7" height="6" rx="1.5" stroke="#1E293B" stroke-width="1.2" fill="none"/>
+            <line x1="80" y1="55" x2="84" y2="55" stroke="#1E293B" stroke-width="1.2"/>
+            <path d="M79 63C81 65 83 65 85 63" stroke="#92400E" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M60 84C60 72 70 68 82 68C94 68 104 72 104 84V154H60V84Z" fill="#1E8E52"/>
+            <path d="M70 70L82 100L94 70" stroke="#FFFFFF" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M96 90L112 94" stroke="#FBBF24" stroke-width="4.5" stroke-linecap="round"/>
+            <rect x="108" y="80" width="22" height="30" rx="3" fill="#0F172A" stroke="#334155" stroke-width="1"/>
+            <rect x="110" y="82" width="18" height="26" rx="2" fill="#38BDF8"/>
+            <line x1="113" y1="88" x2="125" y2="88" stroke="#FFFFFF" stroke-width="1.5"/>
+            <!-- 3 students listening -->
+            <ellipse cx="160" cy="85" rx="11" ry="12" fill="#FBBF24"/>
+            <path d="M149 81C149 72 154 68 160 68C166 68 171 72 171 81V84H149V81Z" fill="#1C1917"/>
+            <path d="M144 110C144 100 150 96 160 96C170 96 176 100 176 110V152H144V110Z" fill="#F97316"/>
+            <circle cx="163" cy="84" r="1.5" fill="#1C1917"/>
+            <ellipse cx="196" cy="80" rx="11" ry="12" fill="#FBBF24"/>
+            <path d="M185 76C185 67 190 63 196 63C202 63 207 67 207 76V80H185V76Z" fill="#1C1917"/>
+            <ellipse cx="209" cy="76" rx="4" ry="6" fill="#1C1917"/>
+            <path d="M180 106C180 96 186 92 196 92C206 92 212 96 212 106V152H180V106Z" fill="#8B5CF6"/>
+            <circle cx="194" cy="79" r="1.5" fill="#1C1917"/>
+            <ellipse cx="232" cy="85" rx="11" ry="12" fill="#FBBF24"/>
+            <path d="M221 81C221 72 226 68 232 68C238 68 243 72 243 81V84H221V81Z" fill="#1C1917"/>
+            <path d="M216 110C216 100 222 96 232 96C242 96 248 100 248 110V152H216V110Z" fill="#22C55E"/>
+            <circle cx="230" cy="84" r="1.5" fill="#1C1917"/>
+            <rect x="156" y="120" width="30" height="18" rx="2" fill="#FFFFFF" transform="rotate(-6 156 120)"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- 4 Class Metric Summary Cards -->
+      <div class="metrics-grid-4">
+        <div class="metric-box">
+          <div class="metric-icon-circle b">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-label">Total Students</div>
+            <div class="metric-value">28</div>
+            <div class="metric-sub" style="color:var(--blue);cursor:pointer;" data-goto="progress">👥 View all students</div>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-icon-circle g">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-label">Lessons Created</div>
+            <div class="metric-value">16</div>
+            <div class="metric-sub">📅 This month</div>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-icon-circle o">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-label">Worksheets Generated</div>
+            <div class="metric-value">32</div>
+            <div class="metric-sub">📅 This month</div>
+          </div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-icon-circle p">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <div class="metric-info">
+            <div class="metric-label">Assignments Pending</div>
+            <div class="metric-value">7</div>
+            <div class="metric-sub" style="color:#D97706;">⏳ To be reviewed</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Teaching Assistant Pipeline Card -->
+      <section class="ai-pipeline-card">
+        <div class="ai-pipeline-header">
+          <div class="ai-pipeline-title-wrap">
+            <h3>AI Teaching Assistant</h3>
+            <span class="badge-new" style="background:#F3E8FF;color:#7C3AED;">New</span>
+          </div>
+        </div>
+        <p style="font-size:0.85rem;color:var(--ink-soft);">Create complete, culturally grounded learning material in seconds with AI.</p>
+
+        <div class="ai-pipeline-steps-grid">
+          <div class="pipeline-step-box">
+            <div class="pipeline-step-icon" style="background:#DCFCE7;color:#15803D;">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+            </div>
+            <h5>Enter Topic / Upload</h5>
+            <p>1</p>
+          </div>
+          <div class="pipeline-arrow">➔</div>
+
+          <div class="pipeline-step-box">
+            <div class="pipeline-step-icon" style="background:#EFF6FF;color:#2563EB;">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <h5>AI Localizes</h5>
+            <p>(Any Language)</p>
+          </div>
+          <div class="pipeline-arrow">➔</div>
+
+          <div class="pipeline-step-box">
+            <div class="pipeline-step-icon" style="background:#FEF3C7;color:#D97706;">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+            </div>
+            <h5>Generate Resources</h5>
+            <p>(Voice, Questions, Worksheet)</p>
+          </div>
+          <div class="pipeline-arrow">➔</div>
+
+          <div class="pipeline-step-box">
+            <div class="pipeline-step-icon" style="background:#F3E8FF;color:#7C3AED;">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            </div>
+            <h5>Assign &amp; Track</h5>
+            <p>Student Progress</p>
+          </div>
+        </div>
+
+        <div class="ai-pipeline-actions">
+          <button class="btn-create-lesson-ai" data-goto="ai-generator">
+            <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Create New Lesson</span>
+          </button>
+          <button class="btn-outline-action" data-goto="lessons">View My Lessons</button>
+        </div>
+      </section>
+
+      <!-- Problem We Solve vs Solution Banner -->
+      <div class="problem-solution-banner">
+        <div class="ps-col">
+          <h5>Problem We Solve</h5>
+          <p>Many tribal children struggle because primary learning material is not available in their mother tongue.</p>
+        </div>
+        <div style="display:flex;justify-content:center;">
+          <svg viewBox="0 0 60 40" style="width:60px;height:38px;">
+            <circle cx="20" cy="18" r="8" fill="#FBBF24"/>
+            <path d="M12 36c0-6 4-9 8-9s8 3 8 9v2h-16v-2z" fill="#D97706"/>
+            <circle cx="42" cy="18" r="8" fill="#FBBF24"/>
+            <path d="M34 36c0-6 4-9 8-9s8 3 8 9v2h-16v-2z" fill="#2563EB"/>
+          </svg>
+        </div>
+        <div class="ps-col solution">
+          <h5>Our Solution</h5>
+          <p>BhashaSetu uses AI to translate, simplify and deliver personalized learning in local tribal languages with voice support.</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions (3 Cards) -->
+      <section class="quick-actions">
+        <div class="qa-card green" data-goto="tool-text">
+          <div class="qa-top-row">
+            <div class="qa-icon-wrap">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M5 8h9M9 5v3c0 4-2 7-6 8.5M9 12c1.5 2 3.5 3.3 6 3.8"/><path d="M14 20l4-9 4 9M15.3 17h5.4"/></svg>
+            </div>
+            <div class="qa-title">Translate Content</div>
+          </div>
+          <div class="qa-bottom-row">
+            <div class="qa-desc">Translate lessons, activities and words</div>
+            <div class="qa-arrow-btn"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="qa-card purple" data-goto="tool-voice">
+          <div class="qa-top-row">
+            <div class="qa-icon-wrap">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4v5a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 11a6 6 0 0 0 12 0M12 19v3"/></svg>
+            </div>
+            <div class="qa-title">Voice Conversation</div>
+          </div>
+          <div class="qa-bottom-row">
+            <div class="qa-desc">Real-time voice-to-voice classroom translation</div>
+            <div class="qa-arrow-btn"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="qa-card blue" data-goto="worksheets">
+          <div class="qa-top-row">
+            <div class="qa-icon-wrap">
+              <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+            </div>
+            <div class="qa-title">Generate Worksheet</div>
+          </div>
+          <div class="qa-bottom-row">
+            <div class="qa-desc">Create bilingual worksheets instantly</div>
+            <div class="qa-arrow-btn"><svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Lessons -->
+      <section class="section-box">
+        <div class="section-header-line">
+          <h3>Recent Lessons</h3>
+          <a class="link-view-all" data-goto="lessons" role="button">View all</a>
+        </div>
+
+        <div class="lesson-row-card">
+          <div class="lesson-thumb-art">
+            <svg viewBox="0 0 80 56" fill="none">
+              <rect width="80" height="56" rx="6" fill="#FDF6B2"/>
+              <ellipse cx="40" cy="50" rx="36" ry="10" fill="#86EFAC"/>
+              <circle cx="24" cy="26" r="5" fill="#FBBF24"/>
+              <path d="M19 33C19 29 21 28 24 28C27 28 29 29 29 33V46H19V33Z" fill="#2563EB"/>
+              <text x="36" y="32" font-size="12" font-weight="700" fill="#78350F">1 2 3</text>
+            </svg>
+          </div>
+          <div class="lesson-meta-wrap">
+            <div class="lesson-heading">गिनती (Counting 1-10)</div>
+            <div class="lesson-pill-tag">Hindi → Ho</div>
+            <div class="lesson-sub-meta">Grade 1 · FLN - Numeracy</div>
+          </div>
+          <div class="lesson-status-side">
+            <div>
+              <span class="status-pill-green">Translated</span>
+              <div class="time-text">2 days ago</div>
+            </div>
+            <div class="dots-menu-btn">⋮</div>
+          </div>
+        </div>
+
+        <div class="lesson-row-card">
+          <div class="lesson-thumb-art">
+            <svg viewBox="0 0 80 56" fill="none">
+              <rect width="80" height="56" rx="6" fill="#F3E8FF"/>
+              <circle cx="21" cy="26" r="4" fill="#EF4444"/>
+              <circle cx="29" cy="24" r="4" fill="#3B82F6"/>
+              <circle cx="26" cy="33" r="4" fill="#10B981"/>
+            </svg>
+          </div>
+          <div class="lesson-meta-wrap">
+            <div class="lesson-heading">हमारे रंग (Our Colors)</div>
+            <div class="lesson-pill-tag">Hindi → Mundari</div>
+            <div class="lesson-sub-meta">Grade 1 · FLN - Literacy</div>
+          </div>
+          <div class="lesson-status-side">
+            <div>
+              <span class="status-pill-green">Translated</span>
+              <div class="time-text">3 days ago</div>
+            </div>
+            <div class="dots-menu-btn">⋮</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Student Progress Overview (4 bar cards) -->
+      <section class="section-box">
+        <div class="section-header-line">
+          <h3>Student Progress Overview</h3>
+          <div class="btn-chip" style="padding:4px 10px;font-size:0.78rem;">
+            This Week
+            <svg class="icon" style="width:11px;height:11px;" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+
+        <div class="progress-card-grid">
+          <div class="progress-stat-card">
+            <div class="progress-stat-top">
+              <span class="progress-stat-title">Literacy</span>
+              <span class="progress-stat-pct">72%</span>
+            </div>
+            <div class="progress-track-bar">
+              <div class="progress-bar-inner" style="width:72%;background:var(--green);"></div>
+            </div>
+          </div>
+
+          <div class="progress-stat-card">
+            <div class="progress-stat-top">
+              <span class="progress-stat-title">Numeracy</span>
+              <span class="progress-stat-pct">68%</span>
+            </div>
+            <div class="progress-track-bar">
+              <div class="progress-bar-inner" style="width:68%;background:var(--purple);"></div>
+            </div>
+          </div>
+
+          <div class="progress-stat-card">
+            <div class="progress-stat-top">
+              <span class="progress-stat-title">Listening</span>
+              <span class="progress-stat-pct">75%</span>
+            </div>
+            <div class="progress-track-bar">
+              <div class="progress-bar-inner" style="width:75%;background:var(--blue);"></div>
+            </div>
+          </div>
+
+          <div class="progress-stat-card">
+            <div class="progress-stat-top">
+              <span class="progress-stat-title">Participation</span>
+              <span class="progress-stat-pct">80%</span>
+            </div>
+            <div class="progress-track-bar">
+              <div class="progress-bar-inner" style="width:80%;background:var(--orange);"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================== 2. AI LESSON GENERATOR VIEW ===================== -->
+    <div class="module-view-container" id="view-ai-generator">
+      <div class="tool-page-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <h2 style="font-size:1.35rem;font-weight:700;">AI Lesson Generator ✨</h2>
+            <p style="font-size:0.85rem;color:var(--ink-soft);">Create complete learning packs in any tribal mother tongue in seconds.</p>
+          </div>
+        </div>
+
+        <div class="generator-split-grid">
+          <div class="generator-input-pane">
+            <div class="tab-pills-row">
+              <button class="tab-pill-btn active">Enter Topic</button>
+              <button class="tab-pill-btn">Upload File</button>
+            </div>
+
+            <div class="form-row-field">
+              <label>Topic / Lesson Title</label>
+              <input type="text" class="input-form-elem" id="ai-gen-topic" value="Animals">
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" class="form-row-field">
+              <div>
+                <label>Grade</label>
+                <select class="input-form-elem" id="ai-gen-grade">
+                  <option>Grade 1</option>
+                  <option>Grade 2</option>
+                  <option>Grade 3</option>
+                </select>
+              </div>
+              <div>
+                <label>Subject</label>
+                <select class="input-form-elem" id="ai-gen-subject">
+                  <option>Environmental Studies</option>
+                  <option>Language &amp; Literacy</option>
+                  <option>Numeracy</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row-field">
+              <label>Language</label>
+              <select class="input-form-elem" id="ai-gen-lang">
+                <option value="ho">Ho (हो)</option>
+                <option value="mundari">Mundari (मुंडारी)</option>
+                <option value="santhali">Santhali (संथाली)</option>
+              </select>
+            </div>
+
+            <button class="btn-solid-green" id="btn-run-ai-generate" style="margin-top:14px;padding:12px;">
+              Generate with AI ✨
+            </button>
+          </div>
+
+          <div class="generator-output-pane">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <h4 style="font-size:0.96rem;font-weight:700;">AI Generated Learning Pack ✨</h4>
+              <span class="badge-new" style="background:#DCFCE7;color:#16A34A;">Ready</span>
+            </div>
+
+            <div class="tab-pills-row" style="margin-bottom:12px;">
+              <button class="tab-pill-btn active">Lesson</button>
+              <button class="tab-pill-btn">Explanation</button>
+              <button class="tab-pill-btn">Voice</button>
+              <button class="tab-pill-btn">Worksheet</button>
+              <button class="tab-pill-btn">Questions</button>
+            </div>
+
+            <div style="background:#FFFFFF;border:1px solid var(--border);border-radius:var(--r-s);padding:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <h5 style="font-size:1.1rem;font-weight:700;color:#0F172A;" id="gen-pack-title">एना: गोरु (Cow)</h5>
+                  <p style="font-size:0.86rem;margin-top:6px;line-height:1.6;" id="gen-pack-body">
+                    गोरु एक घरेलु जानवर है।<br>
+                    एना दुध देताना।<br>
+                    हम गोरु के सम्मान करुए।
+                  </p>
+                </div>
+                <div style="width:60px;height:50px;background:#FEF3C7;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                  🐮
+                </div>
+              </div>
+
+              <div class="audio-player-mock">
+                <button class="play-circle-green">
+                  <svg viewBox="0 0 16 16" style="width:11px;height:11px;fill:#fff;"><polygon points="4,2 14,8 4,14"/></svg>
+                </button>
+                <div class="audio-progress-track"></div>
+                <span style="font-size:0.72rem;font-family:monospace;color:var(--ink-soft);">0:00 / 0:12</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;">
+              <span style="font-size:0.72rem;color:var(--green-dark);font-weight:600;">✨ Vernacular localized by BhashaSetu AI</span>
+              <button class="btn-chip" onclick="alert('Learning pack assigned to Grade 1 class!');">Assign to Class</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 3. STUDENT LEARNING PORTAL VIEW ===================== -->
+    <div class="module-view-container" id="view-student-portal">
+      <div class="student-portal-container">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <h2 style="font-size:1.35rem;font-weight:700;">Hello, Asha! <span aria-hidden="true">👋</span></h2>
+            <p style="font-size:0.85rem;color:var(--ink-soft);">Let's learn something new today.</p>
+          </div>
+          <div style="width:40px;height:40px;border-radius:50%;background:#FDE68A;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">
+            👧
+          </div>
+        </div>
+
+        <div class="student-hero-lesson">
+          <div>
+            <span style="font-size:0.72rem;font-weight:700;color:#1D4ED8;text-transform:uppercase;">Today's Lesson ➔</span>
+            <h3 style="font-size:1.25rem;font-weight:700;margin:4px 0 2px;">Animals 🐮</h3>
+            <p style="font-size:0.78rem;color:#1E40AF;">Ho Language · Audio Story</p>
+            <button class="btn-solid-green" style="margin-top:12px;padding:8px 18px;width:auto;border-radius:99px;" data-goto="ai-generator">
+              + Start Lesson
+            </button>
+          </div>
+          <div style="font-size:3.5rem;">🐄</div>
+        </div>
+
+        <h4 style="font-size:0.92rem;font-weight:700;margin-bottom:10px;">Quick Actions</h4>
+        <div class="student-actions-grid">
+          <div class="student-action-card" data-goto="lessons">
+            <span style="font-size:1.6rem;">🎧</span>
+            <div>
+              <strong style="font-size:0.84rem;display:block;">Listen &amp; Learn</strong>
+              <span style="font-size:0.72rem;color:var(--ink-soft);">Audio lessons</span>
+            </div>
+          </div>
+
+          <div class="student-action-card" data-goto="worksheets">
+            <span style="font-size:1.6rem;">✏️</span>
+            <div>
+              <strong style="font-size:0.84rem;display:block;">Practice</strong>
+              <span style="font-size:0.72rem;color:var(--ink-soft);">Fun activities</span>
+            </div>
+          </div>
+
+          <div class="student-action-card" data-goto="progress">
+            <span style="font-size:1.6rem;">📊</span>
+            <div>
+              <strong style="font-size:0.84rem;display:block;">My Progress</strong>
+              <span style="font-size:0.72rem;color:var(--ink-soft);">See your badges</span>
+            </div>
+          </div>
+
+          <div class="student-action-card" id="card-open-ai-tutor">
+            <span style="font-size:1.6rem;">🤖</span>
+            <div>
+              <strong style="font-size:0.84rem;display:block;">Ask AI Tutor</strong>
+              <span style="font-size:0.72rem;color:var(--ink-soft);">Doubt? Ask here</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 4. STUDENT PROGRESS & AI TABLE ===================== -->
+    <div class="module-view-container" id="view-progress">
+      <div class="tool-page-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div>
+            <h2 style="font-size:1.35rem;font-weight:700;">Student Progress &amp; Class Insights</h2>
+            <p style="font-size:0.85rem;color:var(--ink-soft);">Competency tracking and AI-driven recommendations for teachers.</p>
+          </div>
+          <div class="btn-chip">This Month 📅</div>
+        </div>
+
+        <h4 style="font-size:0.92rem;margin:16px 0 10px;">Class Overview</h4>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;text-align:center;">
+          <div style="background:#FAFBFB;padding:14px;border:1px solid var(--border);border-radius:var(--r-s);">
+            <span style="font-size:0.75rem;color:var(--ink-soft);">Average Literacy</span>
+            <div style="font-size:1.4rem;font-weight:700;color:var(--green);margin-top:4px;">72%</div>
+          </div>
+          <div style="background:#FAFBFB;padding:14px;border:1px solid var(--border);border-radius:var(--r-s);">
+            <span style="font-size:0.75rem;color:var(--ink-soft);">Average Numeracy</span>
+            <div style="font-size:1.4rem;font-weight:700;color:var(--purple);margin-top:4px;">68%</div>
+          </div>
+          <div style="background:#FAFBFB;padding:14px;border:1px solid var(--border);border-radius:var(--r-s);">
+            <span style="font-size:0.75rem;color:var(--ink-soft);">Listening Skills</span>
+            <div style="font-size:1.4rem;font-weight:700;color:var(--blue);margin-top:4px;">75%</div>
+          </div>
+          <div style="background:#FAFBFB;padding:14px;border:1px solid var(--border);border-radius:var(--r-s);">
+            <span style="font-size:0.75rem;color:var(--ink-soft);">Participation</span>
+            <div style="font-size:1.4rem;font-weight:700;color:var(--orange);margin-top:4px;">80%</div>
+          </div>
+        </div>
+
+        <h4 style="font-size:0.92rem;margin:24px 0 6px;">Student Performance</h4>
+        <div class="performance-table-wrap">
+          <table class="progress-data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Literacy</th>
+                <th>Numeracy</th>
+                <th>Listening</th>
+                <th>Overall</th>
+                <th>AI Recommendation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Asha Kumari</strong></td>
+                <td>82%</td>
+                <td>74%</td>
+                <td>85%</td>
+                <td><strong>80%</strong></td>
+                <td><span class="ai-tag-recommend" style="background:#DCFCE7;color:#15803D;">Great progress! Keep it up</span></td>
+              </tr>
+              <tr>
+                <td><strong>Raju Murmu</strong></td>
+                <td>61%</td>
+                <td>79%</td>
+                <td>64%</td>
+                <td><strong>68%</strong></td>
+                <td><span class="ai-tag-recommend" style="background:#FEF3C7;color:#B45309;">Practice reading &amp; vocabulary</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sita Tudu</strong></td>
+                <td>91%</td>
+                <td>88%</td>
+                <td>92%</td>
+                <td><strong>90%</strong></td>
+                <td><span class="ai-tag-recommend" style="background:#F3E8FF;color:#7C3AED;">Ready for advanced level</span></td>
+              </tr>
+              <tr>
+                <td><strong>Rohit Hansda</strong></td>
+                <td>58%</td>
+                <td>63%</td>
+                <td>60%</td>
+                <td><strong>60%</strong></td>
+                <td><span class="ai-tag-recommend" style="background:#FEE2E2;color:#B91C1C;">Needs extra reading practice</span></td>
+              </tr>
+              <tr>
+                <td><strong>Lata Hembram</strong></td>
+                <td>76%</td>
+                <td>71%</td>
+                <td>78%</td>
+                <td><strong>75%</strong></td>
+                <td><span class="ai-tag-recommend" style="background:#EFF6FF;color:#1D4ED8;">Good improvement!</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 5. FULL DEMO: LESSONS ===================== -->
+    <div class="module-view-container" id="view-lessons">
+      <div class="tool-page-card">
+        <div class="section-header-line" style="margin-bottom:6px;">
+          <h3>Interactive Lessons in Ho, Mundari &amp; Santhali</h3>
+          <span class="status-pill-green">4 Lessons Available</span>
+        </div>
+        <p style="color:var(--ink-soft);margin-bottom:16px;">FLN-aligned, mother-tongue foundational learning content for primary school grades.</p>
+
+        <div class="filter-pills-row">
+          <span class="filter-pill-tab active">All Lessons</span>
+          <span class="filter-pill-tab">Ho</span>
+          <span class="filter-pill-tab">Mundari</span>
+          <span class="filter-pill-tab">Santhali</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div class="lesson-thumb-art" style="background:#FEF3C7;width:74px;height:52px;">
+              <svg viewBox="0 0 74 52"><rect width="74" height="52" fill="#FDE68A"/><text x="26" y="32" font-size="16" font-weight="700" fill="#B45309">1-10</text></svg>
+            </div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading" style="font-size:1rem;">गिनती (Counting 1-10)</div>
+              <div class="lesson-pill-tag">Hindi → Ho · Grade 1 · Numeracy</div>
+              <div class="lesson-sub-meta">संख्या पहचान, गिनना और मूल गणितीय संकल्पना सीखें।</div>
+            </div>
+            <div style="text-align:right;">
+              <span class="status-pill-green">75% Completed</span>
+              <button class="btn-chip" style="margin-top:6px;" data-goto="ai-generator">Open Lesson</button>
+            </div>
+          </div>
+
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div class="lesson-thumb-art" style="background:#F2EEFF;width:74px;height:52px;">
+              <svg viewBox="0 0 74 52"><rect width="74" height="52" fill="#E9D5FF"/><circle cx="37" cy="26" r="14" fill="#7C5CFC"/></svg>
+            </div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading" style="font-size:1rem;">हमारे रंग (Our Colors)</div>
+              <div class="lesson-pill-tag">Hindi → Mundari · Grade 1 · Literacy</div>
+              <div class="lesson-sub-meta">विभिन्न रंगों की पहचान और मुंडारी में उनके पारंपरिक नाम।</div>
+            </div>
+            <div style="text-align:right;">
+              <span class="status-pill-green" style="background:#F2EEFF;color:var(--purple);">60% Completed</span>
+              <button class="btn-chip" style="margin-top:6px;" data-goto="ai-generator">Open Lesson</button>
+            </div>
+          </div>
+
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div class="lesson-thumb-art" style="background:#DCFCE7;width:74px;height:52px;">
+              <svg viewBox="0 0 74 52"><rect width="74" height="52" fill="#BBF7D0"/><text x="24" y="32" font-size="20">🐘</text></svg>
+            </div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading" style="font-size:1rem;">जानवरों के नाम (Names of Animals)</div>
+              <div class="lesson-pill-tag">Hindi → Santhali · Grade 1 · Literacy</div>
+              <div class="lesson-sub-meta">घरेलू और जंगली पशुओं के संथाली नाम और ध्वनियों की पहचान।</div>
+            </div>
+            <div style="text-align:right;">
+              <span class="status-pill-green">80% Completed</span>
+              <button class="btn-chip" style="margin-top:6px;" data-goto="ai-generator">Open Lesson</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 6. FULL DEMO: WORKSHEETS ===================== -->
+    <div class="module-view-container" id="view-worksheets">
+      <div class="tool-page-card">
+        <div class="section-header-line" style="margin-bottom:6px;">
+          <h3>Bilingual Worksheets &amp; Activity Sheets</h3>
+          <button class="btn-solid-green" style="width:auto;padding:8px 18px;margin:0;" data-goto="ai-generator">+ Generate Worksheet</button>
+        </div>
+        <p style="color:var(--ink-soft);margin-bottom:16px;">Printable bilingual practice sheets designed for early childhood learning.</p>
+
+        <div class="filter-pills-row">
+          <span class="filter-pill-tab active">All</span>
+          <span class="filter-pill-tab">Ho</span>
+          <span class="filter-pill-tab">Mundari</span>
+          <span class="filter-pill-tab">Santhali</span>
+          <span class="filter-pill-tab">Grade 1</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div style="color:var(--green);font-size:1.8rem;width:40px;text-align:center;">📄</div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading">गिनती अभ्यास पत्रक (Counting Worksheet 1-10)</div>
+              <div class="lesson-sub-meta">Grade 1 · Numeracy · Bilingual (Hindi / Ho)</div>
+            </div>
+            <span style="font-size:0.75rem;color:#DC2626;background:#FEE2E2;padding:4px 8px;border-radius:4px;font-weight:600;">PDF 12 KB</span>
+            <button class="btn-chip" onclick="alert('Downloading गिनती अभ्यास पत्रक (PDF 12 KB)...');">Download</button>
+          </div>
+
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div style="color:var(--purple);font-size:1.8rem;width:40px;text-align:center;">🎨</div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading">रंग पहचानें (Colors Identification Worksheet)</div>
+              <div class="lesson-sub-meta">Grade 1 · Literacy · Bilingual (Hindi / Mundari)</div>
+            </div>
+            <span style="font-size:0.75rem;color:#DC2626;background:#FEE2E2;padding:4px 8px;border-radius:4px;font-weight:600;">PDF 15 KB</span>
+            <button class="btn-chip" onclick="alert('Downloading रंग पहचानें (PDF 15 KB)...');">Download</button>
+          </div>
+
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div style="color:var(--blue);font-size:1.8rem;width:40px;text-align:center;">🐾</div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading">जानवरों को मिलाएँ (Match Animals Names)</div>
+              <div class="lesson-sub-meta">Grade 1 · Literacy · Bilingual (Hindi / Santhali)</div>
+            </div>
+            <span style="font-size:0.75rem;color:#DC2626;background:#FEE2E2;padding:4px 8px;border-radius:4px;font-weight:600;">PDF 18 KB</span>
+            <button class="btn-chip" onclick="alert('Downloading जानवरों को मिलाएँ (PDF 18 KB)...');">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 7. FULL DEMO: ASSIGNMENTS ===================== -->
+    <div class="module-view-container" id="view-assessments">
+      <div class="tool-page-card">
+        <div class="section-header-line" style="margin-bottom:6px;">
+          <h3>Assignments &amp; Student Submissions</h3>
+          <button class="btn-solid-green" style="width:auto;padding:8px 18px;margin:0;" onclick="alert('Assignment creation wizard will open.');">+ New Assignment</button>
+        </div>
+        <p style="color:var(--ink-soft);margin-bottom:16px;">Track oral recitation and written homework submissions from students.</p>
+
+        <div class="filter-pills-row">
+          <span class="filter-pill-tab active">All</span>
+          <span class="filter-pill-tab">Pending (7)</span>
+          <span class="filter-pill-tab">Submitted</span>
+          <span class="filter-pill-tab">Graded</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div style="font-size:1.6rem;color:var(--blue);">📝</div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading">घर पर 1-10 तक लिखें (Numbers 1-10 in Ho)</div>
+              <div class="lesson-sub-meta">Grade 1 · Numeracy · Ho language</div>
+            </div>
+            <span class="status-pill-green">15/25 Submitted</span>
+            <button class="btn-chip" onclick="alert('Reviewing submissions for Numbers 1-10');">Review</button>
+          </div>
+
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div style="font-size:1.6rem;color:var(--purple);">🎨</div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading">अपने पसंदीदा रंग पर चित्र बनाएं (Draw Your Favorite Color)</div>
+              <div class="lesson-sub-meta">Grade 1 · Literacy · Mundari language</div>
+            </div>
+            <span class="status-pill-green" style="background:#FEF3C7;color:#B45309;">8/25 Submitted</span>
+            <button class="btn-chip" onclick="alert('Reviewing submissions for Draw Favorite Color');">Review</button>
+          </div>
+
+          <div class="lesson-row-card" style="padding:14px;border:1px solid var(--border);border-radius:var(--r-m);background:#FAFBFB;">
+            <div style="font-size:1.6rem;color:var(--orange);">🦁</div>
+            <div class="lesson-meta-wrap">
+              <div class="lesson-heading">5 जानवरों के नाम लिखें (Write 5 Animals in Santhali)</div>
+              <div class="lesson-sub-meta">Grade 1 · Literacy · Santhali language</div>
+            </div>
+            <span class="status-pill-green" style="background:#FEE2E2;color:#B91C1C;">5/25 Submitted</span>
+            <button class="btn-chip" onclick="alert('Reviewing submissions for 5 Animals');">Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 8. FULL DEMO: RESOURCES ===================== -->
+    <div class="module-view-container" id="view-resources">
+      <div class="tool-page-card">
+        <div class="section-header-line" style="margin-bottom:6px;">
+          <h3>Learning &amp; Teaching Resources</h3>
+          <span class="status-pill-green">6 Categories</span>
+        </div>
+        <p style="color:var(--ink-soft);margin-bottom:16px;">Audio stories, picture dictionaries, digitized textbooks and training guides.</p>
+
+        <div class="resource-6-grid">
+          <div class="resource-item-card" onclick="alert('Opening e-Books collection in Ho, Mundari and Santhali');">
+            <div style="font-size:2.2rem;margin-bottom:6px;">📚</div>
+            <strong style="font-size:0.92rem;display:block;">e-Books</strong>
+            <span style="font-size:0.75rem;color:var(--ink-soft);">पुस्तकें पढ़ें</span>
+          </div>
+
+          <div class="resource-item-card" onclick="alert('Opening Audio Folk Tales in tribal dialects');">
+            <div style="font-size:2.2rem;margin-bottom:6px;">🎧</div>
+            <strong style="font-size:0.92rem;display:block;">Audio Stories</strong>
+            <span style="font-size:0.75rem;color:var(--ink-soft);">कहानियां सुनें</span>
+          </div>
+
+          <div class="resource-item-card" onclick="alert('Opening Animated Vernacular Lessons');">
+            <div style="font-size:2.2rem;margin-bottom:6px;">🎥</div>
+            <strong style="font-size:0.92rem;display:block;">Videos</strong>
+            <span style="font-size:0.75rem;color:var(--ink-soft);">शैक्षिक वीडियो</span>
+          </div>
+
+          <div class="resource-item-card" onclick="alert('Opening Picture Flashcards collection');">
+            <div style="font-size:2.2rem;margin-bottom:6px;">🖼️</div>
+            <strong style="font-size:0.92rem;display:block;">Images</strong>
+            <span style="font-size:0.75rem;color:var(--ink-soft);">चित्र संग्रह</span>
+          </div>
+
+          <div class="resource-item-card" onclick="alert('Opening NEP 2020 Mother-Tongue Teacher Pedagogy Guide');">
+            <div style="font-size:2.2rem;margin-bottom:6px;">📖</div>
+            <strong style="font-size:0.92rem;display:block;">Teacher Guides</strong>
+            <span style="font-size:0.75rem;color:var(--ink-soft);">शिक्षक मार्गदर्शिका</span>
+          </div>
+
+          <div class="resource-item-card" onclick="alert('Opening Printable classroom posters & charts');">
+            <div style="font-size:2.2rem;margin-bottom:6px;">🖨️</div>
+            <strong style="font-size:0.92rem;display:block;">Printables</strong>
+            <span style="font-size:0.75rem;color:var(--ink-soft);">प्रिंट सामग्री</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== 9. FULL DEMO: SETTINGS ===================== -->
+    <div class="module-view-container" id="view-settings">
+      <div class="tool-page-card">
+        <h3 style="margin-bottom:6px;">Settings &amp; Preferences</h3>
+        <p style="color:var(--ink-soft);margin-bottom:16px;">Configure your school profile, dialect settings, and AI translation speeds.</p>
+
+        <div class="settings-stack-list">
+          <div class="setting-item-line" onclick="openLoginModal();">
+            <div>
+              <strong style="display:block;font-size:0.88rem;">Profile Settings</strong>
+              <span style="font-size:0.75rem;color:var(--ink-faint);">Teacher Name, School ID, District (Ranchi / West Singhbhum)</span>
+            </div>
+            <span style="color:var(--ink-soft);font-size:1.1rem;">›</span>
+          </div>
+
+          <div class="setting-item-line">
+            <div>
+              <strong style="display:block;font-size:0.88rem;">Language Preference</strong>
+              <span style="font-size:0.75rem;color:var(--ink-faint);">Primary classroom mother tongue dialect</span>
+            </div>
+            <span style="font-weight:600;color:var(--green-dark);">Ho (हो) ›</span>
+          </div>
+
+          <div class="setting-item-line">
+            <div>
+              <strong style="display:block;font-size:0.88rem;">Audio Voice &amp; Speed</strong>
+              <span style="font-size:0.75rem;color:var(--ink-faint);">Voice synthesis pitch and cadence for classroom speakers</span>
+            </div>
+            <span style="color:var(--ink-soft);">Normal (1.0x) ›</span>
+          </div>
+
+          <div class="setting-item-line">
+            <div>
+              <strong style="display:block;font-size:0.88rem;">Offline Mode Cache</strong>
+              <span style="font-size:0.75rem;color:var(--ink-faint);">Store lessons and voice packs for low-connectivity remote schools</span>
+            </div>
+            <span style="color:var(--green-dark);font-weight:600;">Enabled (142 MB) ›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== QUICK TOOLS VIEWS ===================== -->
+    <div class="module-view-container" id="view-tool-text">
+      <div class="tool-page-card">
+        <h3 style="margin-bottom:14px;">Text Translator</h3>
+        <div class="dual-box-grid">
+          <div class="editor-box">
+            <textarea id="tt-input" placeholder="Enter text in Hindi or English...">नमस्ते, आप कैसे हैं?</textarea>
+            <div class="box-footer-row">
+              <span id="tt-counter">22/5000</span>
+            </div>
+          </div>
+          <div class="editor-box">
+            <div>
+              <div style="font-size:0.75rem;font-weight:600;color:var(--ink-soft);margin-bottom:6px;">Translated Text</div>
+              <div id="tt-output" style="font-size:0.92rem;color:var(--ink);">आमा जोहार, चेलेका मेनाम्-आ?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-view-container" id="view-tool-voice">
+      <div class="tool-page-card">
+        <h3 style="margin-bottom:14px;">Voice Translator</h3>
+        <div style="text-align:center;padding:30px;background:#FAFBFB;border-radius:12px;">
+          <button class="play-circle-green" id="vt-mic-btn" style="width:56px;height:56px;margin:0 auto;">
+            <svg class="icon" style="width:24px;height:24px;stroke:#fff;" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4v5a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 11a6 6 0 0 0 12 0M12 19v3"/></svg>
+          </button>
+          <p style="margin-top:10px;font-weight:600;">Tap mic and speak</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-view-container" id="view-tool-image">
+      <div class="tool-page-card">
+        <h3 style="margin-bottom:14px;">Image Translator</h3>
+        <div style="text-align:center;padding:30px;border:2px dashed #CBD5E1;border-radius:12px;">
+          <p style="font-weight:600;">Upload an image with textbook text</p>
+          <button class="btn-solid-green" style="width:auto;margin-top:10px;">Choose Image</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="module-view-container" id="view-tool-dictionary">
+      <div class="tool-page-card">
+        <h3 style="margin-bottom:14px;">Bilingual Dictionary</h3>
+        <input type="text" class="input-form-elem" placeholder="Search a word in Hindi, English, Ho, or Santhali...">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== RIGHT SIDEBAR ===================== -->
+  <aside class="right-sidebar" id="right-sidebar">
+    <div class="rs-card-box">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <h4>Recent Activity</h4>
+      </div>
+
+      <div class="recent-activity-sidebar-item">
+        <div class="activity-dot-icon">📄</div>
+        <div class="activity-meta-line">
+          <div class="activity-title-txt">Worksheet on Numbers (1-10) Generated in Ho</div>
+          <div class="activity-time-stamp">10:30 AM</div>
+        </div>
+      </div>
+
+      <div class="recent-activity-sidebar-item">
+        <div class="activity-dot-icon">📖</div>
+        <div class="activity-meta-line">
+          <div class="activity-title-txt">Lesson on Animals Translated to Santhali</div>
+          <div class="activity-time-stamp">09:15 AM</div>
+        </div>
+      </div>
+
+      <div class="recent-activity-sidebar-item">
+        <div class="activity-dot-icon">🎙️</div>
+        <div class="activity-meta-line">
+          <div class="activity-title-txt">Voice lesson on Alphabets Created</div>
+          <div class="activity-time-stamp">Yesterday</div>
+        </div>
+      </div>
+
+      <a class="link-view-all" style="display:block;margin-top:8px;font-size:0.75rem;" data-goto="progress">View all activity →</a>
+    </div>
+
+    <div class="rs-card-box">
+      <h4>Language Pair</h4>
+      <div class="lp-select-group">
+        <select class="lp-select-input" id="rs-from">
+          <option value="hindi">Hindi</option>
+          <option value="english">English</option>
+        </select>
+      </div>
+      <div class="lp-swap-center">
+        <button class="btn-swap-mini" id="rs-swap-btn" aria-label="Swap language">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M7 7h11l-3-3M17 17H6l3 3"/></svg>
+        </button>
+      </div>
+      <div class="lp-select-group">
+        <select class="lp-select-input" id="rs-to">
+          <option value="ho">Ho</option>
+          <option value="mundari">Mundari</option>
+          <option value="santhali">Santali</option>
+        </select>
+      </div>
+      <button class="btn-solid-green" id="rs-translate-now">Translate Now</button>
+    </div>
+
+    <div class="rs-card-box">
+      <h4>Quick Tools</h4>
+      <a class="quick-tool-link" data-goto="tool-text">
+        <div class="tool-icon-box">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M5 8h9M9 5v3c0 4-2 7-6 8.5M9 12c1.5 2 3.5 3.3 6 3.8"/><path d="M14 20l4-9 4 9M15.3 17h5.4"/></svg>
+        </div>
+        <span>Text Translator</span>
+      </a>
+
+      <a class="quick-tool-link" data-goto="tool-voice">
+        <div class="tool-icon-box">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a4 4 0 0 1 4 4v5a4 4 0 0 1-8 0V6a4 4 0 0 1 4-4z"/><path d="M6 11a6 6 0 0 0 12 0M12 19v3"/></svg>
+        </div>
+        <span>Voice Translator</span>
+      </a>
+
+      <a class="quick-tool-link" data-goto="tool-image">
+        <div class="tool-icon-box">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="1.5"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <span>Image to Text</span>
+      </a>
+
+      <a class="quick-tool-link" data-goto="tool-dictionary">
+        <div class="tool-icon-box">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 9h8M8 13h5"/></svg>
+        </div>
+        <span>Bilingual Dictionary</span>
+      </a>
+    </div>
+  </aside>
+
+</div>
+
+<!-- ===================== CLEAN LOGIN POPUP MODAL (NEVER ON PAGE BOTTOM) ===================== -->
+<div class="login-modal-overlay" id="login-modal-overlay">
+  <div class="login-modal-card">
+    <button class="btn-close-login-modal" id="btn-close-login" title="Close">✕</button>
+
+    <div style="text-align:center;">
+      <div style="font-family:var(--font-display);font-size:1.35rem;font-weight:800;color:#121858;">
+        Bhasha<span class="setu-gradient" style="background:linear-gradient(115deg, #06B6D4 0%, #10B981 35%, #F97316 70%, #A855F7 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Setu</span>
+      </div>
+      <p style="font-size:0.8rem;color:var(--ink-soft);margin-top:2px;">Sign in to continue</p>
+    </div>
+
+    <div class="login-role-tabs">
+      <button class="role-tab-btn active" id="modal-tab-teacher">Teacher Login</button>
+      <button class="role-tab-btn" id="modal-tab-student">Student Login</button>
+    </div>
+
+    <form onsubmit="event.preventDefault(); handleModalLoginSubmit();">
+      <div class="form-group-item">
+        <label>Select Role</label>
+        <select class="input-form-elem" id="modal-role-select">
+          <option value="Teacher" selected>Teacher</option>
+          <option value="Student">Student</option>
+        </select>
+      </div>
+
+      <div class="form-group-item">
+        <label>Email or Mobile Number</label>
+        <input type="text" class="input-form-elem" placeholder="Enter phone or email" value="teacher@bhashasetu.in" required>
+      </div>
+
+      <div class="form-group-item">
+        <label>Password</label>
+        <input type="password" class="input-form-elem" placeholder="Enter password" value="password123" required>
+      </div>
+
+      <button type="submit" class="btn-solid-green" style="margin-top:14px;padding:12px;font-size:0.92rem;">
+        Sign In
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- FLOATING ASK AI TUTOR AGENT BUTTON -->
+<div class="ai-tutor-fab" id="btn-open-ai-tutor">
+  <span>🤖</span>
+  <span>Ask AI Tutor</span>
+</div>
+
+<!-- AI TUTOR MODAL -->
+<div class="ai-modal-overlay" id="ai-tutor-modal">
+  <div class="ai-modal-card">
+    <div class="ai-modal-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:1.4rem;">🤖</span>
+        <div>
+          <strong style="display:block;font-size:0.95rem;">BhashaSetu AI Tutor</strong>
+          <span style="font-size:0.7rem;opacity:0.9;">Speaks Ho, Mundari, Santhali, Hindi &amp; English</span>
+        </div>
+      </div>
+      <button id="btn-close-ai-modal" style="color:#fff;font-size:1.2rem;font-weight:700;">✕</button>
+    </div>
+
+    <div class="ai-chat-body" id="ai-chat-body">
+      <div class="ai-chat-bubble bot">
+        Johar! 🙏 I am your BhashaSetu AI learning companion. Ask me any question or doubt in your mother tongue!
+      </div>
+    </div>
+
+    <div class="ai-chat-input-bar">
+      <input type="text" id="ai-chat-input" placeholder="Type your doubt or question...">
+      <button class="btn-solid-green" id="btn-send-ai-chat" style="width:auto;padding:8px 16px;margin:0;">Ask</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentCandidateRole = 'Teacher';
+
+  function updateRoleUI(role) {
+    currentCandidateRole = role;
+    const titleEl = document.getElementById('topbar-title');
+    const descEl = document.getElementById('topbar-desc');
+    const roleTextEl = document.getElementById('topbar-role-text');
+    const avatarEl = document.getElementById('topbar-avatar');
+
+    // Hello, Teacher! or Hello, Student!
+    if (role === 'Teacher') {
+      titleEl.innerHTML = 'Hello, Teacher! <span aria-hidden="true">👋</span>';
+      descEl.textContent = "Here's what's happening in your class today.";
+      roleTextEl.textContent = 'Teacher';
+      avatarEl.classList.remove('student-av');
+    } else {
+      titleEl.innerHTML = 'Hello, Student! <span aria-hidden="true">👋</span>';
+      descEl.textContent = 'Learn and practice in your mother tongue with ease.';
+      roleTextEl.textContent = 'Student';
+      avatarEl.classList.add('student-av');
+    }
+  }
+
+  const appShell = document.getElementById('app-shell');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const dashView = document.getElementById('view-dashboard');
+  const detailViews = document.querySelectorAll('.module-view-container');
+  const topbarBackBtn = document.getElementById('btn-topbar-back');
+
+  function switchView(viewName) {
+    navLinks.forEach(link => {
+      const v = link.getAttribute('data-view');
+      if (v === viewName) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    if (viewName === 'dashboard') {
+      dashView.style.display = 'flex';
+      detailViews.forEach(v => v.classList.remove('active-view'));
+      appShell.classList.remove('detail-mode');
+      topbarBackBtn.style.display = 'none';
+      updateRoleUI(currentCandidateRole);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      dashView.style.display = 'none';
+      detailViews.forEach(v => v.classList.remove('active-view'));
+      const target = document.getElementById(`view-${viewName}`);
+      if (target) {
+        target.classList.add('active-view');
+      }
+      appShell.classList.add('detail-mode');
+      topbarBackBtn.style.display = 'inline-flex';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  // Login Modal Handling
+  const loginModal = document.getElementById('login-modal-overlay');
+  const modalRoleSelect = document.getElementById('modal-role-select');
+  const modalTabTeacher = document.getElementById('modal-tab-teacher');
+  const modalTabStudent = document.getElementById('modal-tab-student');
+
+  function openLoginModal() { loginModal.style.display = 'flex'; }
+  function closeLoginModal() { loginModal.style.display = 'none'; }
+
+  document.getElementById('btn-open-login').addEventListener('click', openLoginModal);
+  document.getElementById('user-status-chip').addEventListener('click', openLoginModal);
+  document.getElementById('btn-close-login').addEventListener('click', closeLoginModal);
+
+  modalTabTeacher.addEventListener('click', () => {
+    modalTabTeacher.classList.add('active');
+    modalTabStudent.classList.remove('active');
+    modalRoleSelect.value = 'Teacher';
+  });
+  modalTabStudent.addEventListener('click', () => {
+    modalTabStudent.classList.add('active');
+    modalTabTeacher.classList.remove('active');
+    modalRoleSelect.value = 'Student';
+  });
+  modalRoleSelect.addEventListener('change', () => {
+    if (modalRoleSelect.value === 'Student') {
+      modalTabStudent.classList.add('active');
+      modalTabTeacher.classList.remove('active');
+    } else {
+      modalTabTeacher.classList.add('active');
+      modalTabStudent.classList.remove('active');
+    }
+  });
+
+  function handleModalLoginSubmit() {
+    const selectedRole = modalRoleSelect.value;
+    updateRoleUI(selectedRole);
+    closeLoginModal();
+    if (selectedRole === 'Student') {
+      switchView('student-portal');
+    } else {
+      switchView('dashboard');
+    }
+  }
+
+  // Sidebar links
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      switchView(link.getAttribute('data-view'));
+    });
+  });
+
+  document.querySelectorAll('[data-goto]').forEach(el => {
+    el.addEventListener('click', () => switchView(el.getAttribute('data-goto')));
+  });
+
+  document.querySelectorAll('.brand').forEach(b => {
+    b.addEventListener('click', () => switchView('dashboard'));
+  });
+
+  topbarBackBtn.addEventListener('click', () => switchView('dashboard'));
+
+  // Language Swap
+  document.getElementById('rs-swap-btn').addEventListener('click', () => {
+    const fromSel = document.getElementById('rs-from');
+    fromSel.value = fromSel.value === 'hindi' ? 'english' : 'hindi';
+  });
+
+  // AI Generator Demo
+  document.getElementById('btn-run-ai-generate').addEventListener('click', () => {
+    const topic = document.getElementById('ai-gen-topic').value;
+    const lang = document.getElementById('ai-gen-lang').value;
+    document.getElementById('gen-pack-title').textContent = `${topic} (${lang.toUpperCase()})`;
+    alert('AI successfully generated lesson, audio story and bilingual flashcards!');
+  });
+
+  // AI Tutor Modal
+  const tutorModal = document.getElementById('ai-tutor-modal');
+  const chatBody = document.getElementById('ai-chat-body');
+  const chatInput = document.getElementById('ai-chat-input');
+
+  document.getElementById('btn-open-ai-tutor').addEventListener('click', () => {
+    tutorModal.style.display = 'flex';
+  });
+  document.getElementById('card-open-ai-tutor')?.addEventListener('click', () => {
+    tutorModal.style.display = 'flex';
+  });
+  document.getElementById('btn-close-ai-modal').addEventListener('click', () => {
+    tutorModal.style.display = 'none';
+  });
+
+  function sendAIChat() {
+    const msg = chatInput.value.trim();
+    if (!msg) return;
+    const uBubble = document.createElement('div');
+    uBubble.className = 'ai-chat-bubble user';
+    uBubble.textContent = msg;
+    chatBody.appendChild(uBubble);
+    chatInput.value = '';
+
+    setTimeout(() => {
+      const bBubble = document.createElement('div');
+      bBubble.className = 'ai-chat-bubble bot';
+      bBubble.innerHTML = `<strong>BhashaSetu AI:</strong> Great question! In Ho, this is explained simply as: <em>"हो भाषा में इसे सरल शब्दों में समझाते हैं"</em>. Let me know if you want an audio example!`;
+      chatBody.appendChild(bBubble);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }, 500);
+  }
+
+  document.getElementById('btn-send-ai-chat').addEventListener('click', sendAIChat);
+  chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendAIChat(); });
+
+  // Initialize
+  updateRoleUI(currentCandidateRole);
+</script>
+
+</body>
+</html>
