@@ -186,7 +186,7 @@ export async function translateAndExplainContent(req: ExplainRequest): Promise<E
 }
 
 export interface AITutorOptions {
-  role?: 'Teacher' | 'Student';
+  role?: 'Teacher' | 'Student' | 'Official';
   languageMode?: 'teacher-english' | 'student-selected-language';
   uploadedContent?: string;
   mode?: 'chat' | 'notes' | 'summary' | 'quiz' | 'uploaded';

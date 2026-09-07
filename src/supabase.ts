@@ -154,20 +154,31 @@ export interface SupabaseStudentProgress {
 // Local Storage Key for runtime config overrides
 const SUPABASE_CONFIG_KEY = 'bhashasetu_supabase_config';
 
+// Built-in Supabase Cloud configuration for BhashaSetu
+export const DEFAULT_SUPABASE_URL = 'https://knnupyxcrryxvhnscnix.supabase.co';
+export const DEFAULT_SUPABASE_ANON_KEY = 'sb_publishable_X-7buRKk_-s69_9TfKttQA_SSttSJHy';
+
 export function getSupabaseConfig(): SupabaseConfig {
   try {
     const saved = localStorage.getItem(SUPABASE_CONFIG_KEY);
     if (saved) {
-      return JSON.parse(saved);
+      const parsed = JSON.parse(saved);
+      if (parsed.supabaseUrl && parsed.supabaseAnonKey) {
+        return {
+          ...parsed,
+          connected: true,
+          autoSyncIntervalSec: parsed.autoSyncIntervalSec || 60
+        };
+      }
     }
   } catch (e) {
     // fallback
   }
 
   return {
-    supabaseUrl: (window as any).__SUPABASE_URL__ || '',
-    supabaseAnonKey: (window as any).__SUPABASE_ANON_KEY__ || '',
-    connected: false,
+    supabaseUrl: (window as any).__SUPABASE_URL__ || DEFAULT_SUPABASE_URL,
+    supabaseAnonKey: (window as any).__SUPABASE_ANON_KEY__ || DEFAULT_SUPABASE_ANON_KEY,
+    connected: true,
     autoSyncIntervalSec: 60
   };
 }
@@ -234,8 +245,8 @@ export function getSupabaseAuthStatus(): {
     connected: configured,
     status: configured ? 'CONNECTED' : 'SETUP_REQUIRED',
     message: configured
-      ? 'Supabase backend connected & ready for Google OAuth.'
-      : 'Supabase Not Connected / Setup Required. Provide Supabase URL & Anon Key in Settings to activate real Google Login.',
+      ? 'Supabase cloud database connected & ready for Google OAuth and realtime sync.'
+      : 'Supabase running in local offline-first mode.',
     config: cfg
   };
 }
@@ -356,12 +367,12 @@ export async function testSupabaseConnection(url?: string, key?: string): Promis
   const targetKey = key || getSupabaseConfig().supabaseAnonKey;
 
   if (!targetUrl || !targetKey) {
-    return { success: false, message: 'Please provide both Supabase URL and Anon Key.' };
+    return { success: false, message: 'Supabase URL and Anon Key are required.' };
   }
 
   try {
     const cleanUrl = targetUrl.replace(/\/+$/, '');
-    const res = await fetch(`${cleanUrl}/rest/v1/`, {
+    const res = await fetch(`${cleanUrl}/rest/v1/lessons?select=id&limit=1`, {
       method: 'GET',
       headers: {
         'apikey': targetKey,
@@ -369,15 +380,15 @@ export async function testSupabaseConnection(url?: string, key?: string): Promis
       }
     });
 
-    if (res.ok || res.status === 200 || res.status === 404) {
+    if (res.ok || res.status === 200 || res.status === 206) {
       saveSupabaseConfig({ supabaseUrl: targetUrl, supabaseAnonKey: targetKey, connected: true });
       await logAudit('SUPABASE_CONNECTED', `Successfully connected to Supabase backend: ${targetUrl}`);
       return { success: true, message: 'Successfully verified connection to Supabase cloud instance!' };
     } else {
-      return { success: false, message: `Server returned status ${res.status}: ${res.statusText}` };
+      return { success: false, message: `Cloud database responded with status ${res.status}: ${res.statusText}` };
     }
   } catch (err: any) {
-    return { success: false, message: `Connection failed: ${err?.message || 'Network unreachable'}` };
+    return { success: false, message: `Connection test failed: ${err?.message || 'Network unreachable'}` };
   }
 }
 

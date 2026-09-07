@@ -213,7 +213,7 @@ export function getCurrentUser(): UserRecord {
 }
 
 // 1-Click Offline Classroom Sign-In (Works 100% offline without passwords or cloud dependencies)
-export async function loginLocalOffline(role: 'Teacher' | 'Student'): Promise<UserRecord> {
+export async function loginLocalOffline(role: 'Teacher' | 'Student' | 'Official'): Promise<UserRecord> {
   return await switchRole(role);
 }
 
@@ -227,12 +227,15 @@ export async function loginWithEmail(email: string, _pass?: string): Promise<{ s
     user = await dbGet<UserRecord>('users', 'teacher_1') || undefined;
   } else if (!user && (cleanEmail === 'student@bhashasetu.in' || cleanEmail === 'student' || cleanEmail === 'asha')) {
     user = await dbGet<UserRecord>('users', 'student_asha') || undefined;
+  } else if (!user && (cleanEmail === 'official@bhashasetu.in' || cleanEmail === 'official' || cleanEmail.includes('offic'))) {
+    user = await dbGet<UserRecord>('users', 'official_1') || undefined;
   }
 
   if (!user) {
-    // If it's a first time local offline attempt, helpfully initialize default teacher or student
     if (cleanEmail.includes('student')) {
       user = await switchRole('Student');
+    } else if (cleanEmail.includes('official')) {
+      user = await switchRole('Official');
     } else {
       user = await switchRole('Teacher');
     }
@@ -244,7 +247,7 @@ export async function loginWithEmail(email: string, _pass?: string): Promise<{ s
   return { success: true, message: `Welcome, ${user.name}!`, user };
 }
 
-export async function switchRole(targetRole: 'Teacher' | 'Student'): Promise<UserRecord> {
+export async function switchRole(targetRole: 'Teacher' | 'Student' | 'Official'): Promise<UserRecord> {
   if (targetRole === 'Teacher') {
     let teacher = await dbGet<UserRecord>('users', 'teacher_1');
     if (!teacher) {
@@ -265,6 +268,26 @@ export async function switchRole(targetRole: 'Teacher' | 'Student'): Promise<Use
     currentUser = teacher;
     localStorage.setItem(SESSION_KEY, teacher.id);
     return teacher;
+  } else if (targetRole === 'Official') {
+    let official = await dbGet<UserRecord>('users', 'official_1');
+    if (!official) {
+      official = {
+        id: 'official_1',
+        email: 'official@bhashasetu.in',
+        name: 'Dr. Ramesh Soren',
+        role: 'Official',
+        school: 'District Education Office, West Singhbhum',
+        district: 'West Singhbhum',
+        state: 'Jharkhand',
+        authProvider: 'local',
+        verified: true,
+        createdAt: Date.now()
+      };
+      await dbPut('users', official);
+    }
+    currentUser = official;
+    localStorage.setItem(SESSION_KEY, official.id);
+    return official;
   } else {
     let student = await dbGet<UserRecord>('users', 'student_asha');
     if (!student) {
@@ -304,26 +327,33 @@ export async function logout(): Promise<void> {
   }
   currentUser = null;
   localStorage.removeItem(SESSION_KEY);
-  window.location.href = '/login';
 }
 
 // RBAC Permission Checkers
 export function isTeacher(): boolean {
-  return (currentUser?.role || 'Teacher') === 'Teacher';
+  return (currentUser?.role || 'Teacher') === 'Teacher' || currentUser?.role === 'Official';
 }
 
 export function isStudent(): boolean {
   return currentUser?.role === 'Student';
 }
 
+export function isOfficial(): boolean {
+  return currentUser?.role === 'Official';
+}
+
 export function canPublishContent(): boolean {
-  return isTeacher();
+  return isTeacher() || isOfficial();
 }
 
 export function canGradeAssessments(): boolean {
-  return isTeacher();
+  return isTeacher() || isOfficial();
 }
 
 export function canAccessSettingsAdmin(): boolean {
-  return isTeacher();
+  return isTeacher() || isOfficial();
+}
+
+export function canApproveDistrictCurriculum(): boolean {
+  return isOfficial();
 }

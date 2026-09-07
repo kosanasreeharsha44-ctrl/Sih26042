@@ -8,7 +8,7 @@ export interface UserRecord {
   id: string;
   email: string;
   name: string;
-  role: 'Teacher' | 'Student';
+  role: 'Teacher' | 'Student' | 'Official';
   school: string;
   district: string;
   state: string;
@@ -460,8 +460,39 @@ async function seedDatabaseIfEmpty(): Promise<void> {
       createdAt: Date.now()
     };
 
+    const defaultOfficial: UserRecord = {
+      id: 'official_1',
+      email: 'official@bhashasetu.in',
+      name: 'Dr. Ramesh Soren',
+      role: 'Official',
+      school: 'District Education Office, West Singhbhum',
+      district: 'West Singhbhum',
+      state: 'Jharkhand',
+      authProvider: 'local',
+      verified: true,
+      createdAt: Date.now()
+    };
+
     await dbPut('users', defaultTeacher);
     await dbPut('users', defaultStudent);
+    await dbPut('users', defaultOfficial);
+  } else {
+    // Ensure official user exists even if teacher & student were created earlier
+    const existingOfficial = await dbGet<UserRecord>('users', 'official_1');
+    if (!existingOfficial) {
+      await dbPut('users', {
+        id: 'official_1',
+        email: 'official@bhashasetu.in',
+        name: 'Dr. Ramesh Soren',
+        role: 'Official',
+        school: 'District Education Office, West Singhbhum',
+        district: 'West Singhbhum',
+        state: 'Jharkhand',
+        authProvider: 'local',
+        verified: true,
+        createdAt: Date.now()
+      });
+    }
   }
 
   // 2. Initial Settings (if not set)

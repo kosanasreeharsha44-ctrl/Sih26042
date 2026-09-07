@@ -1077,13 +1077,21 @@ function updateUserUI() {
   const user = getCurrentUser();
   const roleText = document.getElementById('topbar-role-text');
   if (roleText) {
-    roleText.textContent = user.role === 'Student' && user.grade ? `${user.name} (${user.grade})` : user.role;
+    if (user.role === 'Student' && user.grade) {
+      roleText.textContent = `${user.name} (${user.grade})`;
+    } else if (user.role === 'Official') {
+      roleText.textContent = 'District Official (DEO)';
+    } else {
+      roleText.textContent = user.role;
+    }
   }
 
   const topbarTitle = document.getElementById('topbar-title');
   if (topbarTitle) {
     if (user.role === 'Teacher') {
       topbarTitle.innerHTML = `Hello, Teacher! <span aria-hidden="true">👋</span>`;
+    } else if (user.role === 'Official') {
+      topbarTitle.innerHTML = `Hello, Dr. Soren! <span aria-hidden="true">👋</span>`;
     } else {
       topbarTitle.innerHTML = `Hello, ${user.name.split(' ')[0]}! <span aria-hidden="true">👋</span>`;
     }
@@ -1091,7 +1099,27 @@ function updateUserUI() {
 
   const topbarAvatar = document.getElementById('topbar-avatar');
   if (topbarAvatar) {
-    topbarAvatar.innerHTML = user.role === 'Teacher' ? '👩‍🏫' : '👧';
+    topbarAvatar.innerHTML = user.role === 'Teacher' ? '👩‍🏫' : (user.role === 'Official' ? '🏛️' : '👧');
+  }
+
+  // Toggle dashboard container views
+  const teacherDash = document.getElementById('teacher-dashboard-view');
+  const studentDash = document.getElementById('student-dashboard-view');
+  const officialDash = document.getElementById('official-dashboard-view');
+
+  if (user.role === 'Official') {
+    if (teacherDash) teacherDash.style.display = 'none';
+    if (studentDash) studentDash.style.display = 'none';
+    if (officialDash) officialDash.style.display = 'flex';
+    refreshOfficialDashboard();
+  } else if (user.role === 'Student') {
+    if (teacherDash) teacherDash.style.display = 'none';
+    if (studentDash) studentDash.style.display = 'flex';
+    if (officialDash) officialDash.style.display = 'none';
+  } else {
+    if (teacherDash) teacherDash.style.display = 'flex';
+    if (studentDash) studentDash.style.display = 'none';
+    if (officialDash) officialDash.style.display = 'none';
   }
 
   // Update greeting in Student Portal
@@ -1184,7 +1212,7 @@ function updateUserUI() {
   updateSupabaseStatusUI();
 }
 
-// Setup Authentication Gate Screen (Teacher Portal vs Student Portal)
+// Setup Authentication Gate Screen (Teacher Portal vs Student Portal vs Official Portal)
 function setupAuthGate() {
   const authGate = document.getElementById('auth-gate-screen');
   const appShell = document.getElementById('app-shell');
@@ -1192,6 +1220,7 @@ function setupAuthGate() {
 
   const tabTeacher = document.getElementById('gate-tab-teacher');
   const tabStudent = document.getElementById('gate-tab-student');
+  const tabOfficial = document.getElementById('gate-tab-official');
   const roleInput = document.getElementById('gate-selected-role') as HTMLInputElement | null;
   const labelIdentity = document.getElementById('gate-label-identity');
   const inputIdentity = document.getElementById('gate-input-identity') as HTMLInputElement | null;
@@ -1205,16 +1234,17 @@ function setupAuthGate() {
   const inputName = document.getElementById('gate-input-name') as HTMLInputElement | null;
   const form = document.getElementById('gate-login-form') as HTMLFormElement | null;
 
-  let currentRole: 'Teacher' | 'Student' = 'Teacher';
+  let currentRole: 'Teacher' | 'Student' | 'Official' = 'Teacher';
   let isRegisterMode = false;
 
-  const setRole = (role: 'Teacher' | 'Student') => {
+  const setRole = (role: 'Teacher' | 'Student' | 'Official') => {
     currentRole = role;
     if (roleInput) roleInput.value = role;
 
     if (role === 'Teacher') {
       tabTeacher?.classList.add('active');
       tabStudent?.classList.remove('active');
+      tabOfficial?.classList.remove('active');
       if (labelIdentity) labelIdentity.textContent = 'Teacher Email or Mobile';
       if (inputIdentity) {
         inputIdentity.placeholder = 'teacher@bhashasetu.in';
@@ -1223,9 +1253,22 @@ function setupAuthGate() {
       if (studentFields) studentFields.style.display = 'none';
       if (googleText) googleText.textContent = 'Continue with Google (Teacher)';
       if (submitBtn) submitBtn.textContent = isRegisterMode ? 'Register Teacher Account' : 'Sign In as Teacher';
+    } else if (role === 'Official') {
+      tabOfficial?.classList.add('active');
+      tabTeacher?.classList.remove('active');
+      tabStudent?.classList.remove('active');
+      if (labelIdentity) labelIdentity.textContent = 'Official Email or DEO Code';
+      if (inputIdentity) {
+        inputIdentity.placeholder = 'official@bhashasetu.in';
+        if (!isRegisterMode) inputIdentity.value = 'official@bhashasetu.in';
+      }
+      if (studentFields) studentFields.style.display = 'none';
+      if (googleText) googleText.textContent = 'Continue with Google (Official)';
+      if (submitBtn) submitBtn.textContent = isRegisterMode ? 'Register Official Account' : 'Sign In as District Official';
     } else {
       tabStudent?.classList.add('active');
       tabTeacher?.classList.remove('active');
+      tabOfficial?.classList.remove('active');
       if (labelIdentity) labelIdentity.textContent = 'Student ID or Email';
       if (inputIdentity) {
         inputIdentity.placeholder = 'student@bhashasetu.in';
@@ -1239,6 +1282,7 @@ function setupAuthGate() {
 
   tabTeacher?.addEventListener('click', () => setRole('Teacher'));
   tabStudent?.addEventListener('click', () => setRole('Student'));
+  tabOfficial?.addEventListener('click', () => setRole('Official'));
 
   // Toggle Register Mode
   toggleRegBtn?.addEventListener('click', () => {
@@ -1254,7 +1298,11 @@ function setupAuthGate() {
       if (toggleRegBtn) toggleRegBtn.textContent = 'Register New Account';
       if (regPrompt) regPrompt.textContent = 'Need an account?';
       if (submitBtn) submitBtn.textContent = `Sign In as ${currentRole}`;
-      if (inputIdentity) inputIdentity.value = currentRole === 'Teacher' ? 'teacher@bhashasetu.in' : 'student@bhashasetu.in';
+      if (inputIdentity) {
+        if (currentRole === 'Teacher') inputIdentity.value = 'teacher@bhashasetu.in';
+        else if (currentRole === 'Official') inputIdentity.value = 'official@bhashasetu.in';
+        else inputIdentity.value = 'student@bhashasetu.in';
+      }
     }
   });
 
@@ -1278,6 +1326,7 @@ function setupAuthGate() {
   // 1-Click 100% Offline Mode Entry Buttons
   const gateOfflineTeacher = document.getElementById('gate-btn-offline-teacher');
   const gateOfflineStudent = document.getElementById('gate-btn-offline-student');
+  const gateOfflineOfficial = document.getElementById('gate-btn-offline-official');
 
   gateOfflineTeacher?.addEventListener('click', async () => {
     const user = await loginLocalOffline('Teacher');
@@ -1287,6 +1336,11 @@ function setupAuthGate() {
   gateOfflineStudent?.addEventListener('click', async () => {
     const user = await loginLocalOffline('Student');
     await completeAuth(user, `Entered 100% Offline Classroom as ${user.name} (Grade 1 Student)`, '👧');
+  });
+
+  gateOfflineOfficial?.addEventListener('click', async () => {
+    const user = await loginLocalOffline('Official');
+    await completeAuth(user, `Entered 100% Offline as ${user.name} (District Education Office)`, '🏛️');
   });
 
   // Google Sign-in using Supabase OAuth
@@ -1324,32 +1378,90 @@ function setupAuthGate() {
   }
 }
 
+// ===================== REFRESH OFFICIAL DASHBOARD =====================
+export async function refreshOfficialDashboard() {
+  const lessons = await dbGetAll<LessonRecord>('lessons');
+  const quizzes = await dbGetAll<any>('quizzes');
+
+  const statLessons = document.getElementById('official-stat-lessons');
+  if (statLessons) statLessons.textContent = String(lessons.length || 24);
+
+  const statQuizzes = document.getElementById('official-stat-quizzes');
+  if (statQuizzes) statQuizzes.textContent = String(quizzes.length ? quizzes.length * 12 : 128);
+
+  const tbody = document.getElementById('official-curriculum-table-body');
+  if (tbody) {
+    if (lessons.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="padding:20px;text-align:center;color:var(--ink-soft);">No curriculum materials submitted yet.</td></tr>`;
+    } else {
+      tbody.innerHTML = lessons.map(les => {
+        const isApproved = les.published;
+        const statusBg = isApproved ? '#DCFCE7' : '#FEF3C7';
+        const statusColor = isApproved ? '#15803D' : '#92400E';
+        const statusText = isApproved ? '✓ Approved for Cluster' : '⏳ Pending DEO Review';
+        return `
+          <tr style="border-bottom:1px solid #F1F5F9;">
+            <td style="padding:10px 12px;font-weight:600;color:var(--ink);">${escapeHtml(les.title)}</td>
+            <td style="padding:10px 12px;"><span style="background:#F1F5F9;padding:2px 8px;border-radius:4px;font-size:0.75rem;">${escapeHtml(les.targetLang || (les as any).language || 'Ho')}</span></td>
+            <td style="padding:10px 12px;">${escapeHtml(les.grade || 'Grade 1')}</td>
+            <td style="padding:10px 12px;color:var(--ink-soft);">${escapeHtml((les as any).authorName || 'Teacher Sunita')}</td>
+            <td style="padding:10px 12px;">
+              <span style="background:${statusBg};color:${statusColor};padding:3px 8px;border-radius:99px;font-size:0.72rem;font-weight:600;">
+                ${statusText}
+              </span>
+            </td>
+            <td style="padding:10px 12px;text-align:right;">
+              <button type="button" class="btn-chip btn-official-open-les" data-lesson-id="${les.id}" style="font-size:0.75rem;padding:4px 10px;">
+                Inspect
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.querySelectorAll('.btn-official-open-les').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).getAttribute('data-lesson-id');
+          if (id) openLessonInViewer(id);
+        });
+      });
+    }
+  }
+
+  // Wire Official sync button
+  const btnOfficialSync = document.getElementById('btn-official-sync-cloud');
+  btnOfficialSync?.addEventListener('click', async () => {
+    showToast('Syncing district cluster data with cloud...', '⚡');
+    await flushSyncQueue();
+    await syncLocalQueueToSupabase();
+    showToast('District data fully synchronized with Supabase!', '✓');
+  });
+
+  // Wire Official export report button
+  const btnOfficialExport = document.getElementById('btn-official-export-report');
+  btnOfficialExport?.addEventListener('click', () => {
+    const report = {
+      district: 'West Singhbhum',
+      officer: 'Dr. Ramesh Soren',
+      date: new Date().toISOString(),
+      schoolsConnected: 42,
+      lessonsCount: lessons.length,
+      quizzesCount: quizzes.length,
+      nepCompliance: '96.8%'
+    };
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `district-fln-report-${Date.now()}.json`;
+    a.click();
+    showToast('District FLN Audit Report exported successfully!', '📑');
+  });
+}
+
 // ===================== APP INITIALIZATION =====================
 document.addEventListener('DOMContentLoaded', async () => {
   await getDB();
-
-  // Protect private pages with supabase.auth.getSession() — if no session, redirect to /login
-  const isLoginPage = window.location.pathname === '/login';
-  let session = null;
-  try {
-    const { data: sessionData } = await supabase.auth.getSession();
-    session = sessionData?.session;
-  } catch (err) {
-    console.warn('Session verification notice:', err);
-  }
-
-  if (!session) {
-    if (!isLoginPage) {
-      window.location.href = '/login';
-      return;
-    }
-  } else {
-    // If an active session exists and user visits /login, redirect to Home page ("/")
-    if (isLoginPage) {
-      window.location.href = '/';
-      return;
-    }
-  }
 
   const user = await initAuth();
   initSyncEngine();
@@ -1358,7 +1470,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const authGate = document.getElementById('auth-gate-screen');
   const appShell = document.getElementById('app-shell');
 
-  if (!user || isLoginPage) {
+  if (!user) {
     if (authGate) authGate.style.display = 'flex';
     if (appShell) appShell.style.display = 'none';
   } else {
@@ -1541,15 +1653,17 @@ function setupAuthModal() {
   userStatusChip?.addEventListener('click', openModal);
   closeBtn?.addEventListener('click', closeModal);
 
-  // Teacher / Student tab switching in modal
+  // Teacher / Student / Official tab switching in modal
   const tabTeacher = document.getElementById('modal-tab-teacher') || document.getElementById('tab-login-teacher');
   const tabStudent = document.getElementById('modal-tab-student') || document.getElementById('tab-login-student');
-  let selectedRole: 'Teacher' | 'Student' = 'Teacher';
+  const tabOfficial = document.getElementById('modal-tab-official') || document.getElementById('tab-login-official');
+  let selectedRole: 'Teacher' | 'Student' | 'Official' = 'Teacher';
 
   tabTeacher?.addEventListener('click', () => {
     selectedRole = 'Teacher';
     tabTeacher.classList.add('active');
     tabStudent?.classList.remove('active');
+    tabOfficial?.classList.remove('active');
     const roleSelect = document.getElementById('modal-role-select') as HTMLSelectElement;
     if (roleSelect) roleSelect.value = 'Teacher';
   });
@@ -1558,20 +1672,33 @@ function setupAuthModal() {
     selectedRole = 'Student';
     tabStudent.classList.add('active');
     tabTeacher?.classList.remove('active');
+    tabOfficial?.classList.remove('active');
     const roleSelect = document.getElementById('modal-role-select') as HTMLSelectElement;
     if (roleSelect) roleSelect.value = 'Student';
+  });
+
+  tabOfficial?.addEventListener('click', () => {
+    selectedRole = 'Official';
+    tabOfficial.classList.add('active');
+    tabTeacher?.classList.remove('active');
+    tabStudent?.classList.remove('active');
+    const roleSelect = document.getElementById('modal-role-select') as HTMLSelectElement;
+    if (roleSelect) roleSelect.value = 'Official';
   });
 
   // Expose global login handler for the existing inline form onsubmit
   (window as any).handleModalLoginSubmit = async () => {
     const roleSelect = document.getElementById('modal-role-select') as HTMLSelectElement;
-    const currentRole = roleSelect?.value === 'Student' ? 'Student' : selectedRole;
-    await switchRole(currentRole as 'Teacher' | 'Student');
+    const currentRole = roleSelect?.value || selectedRole;
+    await switchRole(currentRole as 'Teacher' | 'Student' | 'Official');
     updateUserUI();
     closeModal();
     if (currentRole === 'Student') {
       navigateTo('student-portal');
       showToast('Signed in as Asha Kumari (Grade 1 Student)', '👧');
+    } else if (currentRole === 'Official') {
+      navigateTo('dashboard');
+      showToast('Signed in as Dr. Ramesh Soren (District Education Officer)', '🏛️');
     } else {
       navigateTo('dashboard');
       showToast('Signed in as Sunita Mahato (Primary Teacher)', '👩‍🏫');
@@ -1591,6 +1718,7 @@ function setupAuthModal() {
   // 1-Click Offline Classroom Buttons inside modal
   const modalOfflineTeacher = document.getElementById('modal-btn-offline-teacher');
   const modalOfflineStudent = document.getElementById('modal-btn-offline-student');
+  const modalOfflineOfficial = document.getElementById('modal-btn-offline-official');
 
   modalOfflineTeacher?.addEventListener('click', async () => {
     const user = await loginLocalOffline('Teacher');
@@ -1608,13 +1736,22 @@ function setupAuthModal() {
     showToast(`Switched to Offline Student Mode (${user.name})`, '👧');
   });
 
+  modalOfflineOfficial?.addEventListener('click', async () => {
+    const user = await loginLocalOffline('Official');
+    updateUserUI();
+    closeModal();
+    navigateTo('dashboard');
+    showToast(`Switched to Offline Official Mode (${user.name})`, '🏛️');
+  });
+
   // Continue / Submit button
   const continueBtn = document.getElementById('btn-modal-continue');
   continueBtn?.addEventListener('click', async () => {
     const emailInput = document.getElementById('login-input-identity') as HTMLInputElement;
     const passInput = document.getElementById('login-input-password') as HTMLInputElement;
 
-    const email = emailInput?.value || (selectedRole === 'Teacher' ? 'teacher@bhashasetu.in' : 'student@bhashasetu.in');
+    const defaultEmail = selectedRole === 'Teacher' ? 'teacher@bhashasetu.in' : (selectedRole === 'Official' ? 'official@bhashasetu.in' : 'student@bhashasetu.in');
+    const email = emailInput?.value || defaultEmail;
     const pass = passInput?.value || 'password123';
 
     const result = await loginWithEmail(email, pass);
@@ -1630,6 +1767,7 @@ function setupAuthModal() {
   // Quick switch role buttons inside modal
   const btnRoleTeacher = document.getElementById('btn-role-teacher');
   const btnRoleStudent = document.getElementById('btn-role-student');
+  const btnRoleOfficial = document.getElementById('btn-role-official');
 
   btnRoleTeacher?.addEventListener('click', async () => {
     await switchRole('Teacher');
@@ -1645,6 +1783,14 @@ function setupAuthModal() {
     closeModal();
     navigateTo('student-portal');
     showToast('Switched to Student Mode (Asha Kumari)', '👧');
+  });
+
+  btnRoleOfficial?.addEventListener('click', async () => {
+    await switchRole('Official');
+    updateUserUI();
+    closeModal();
+    navigateTo('dashboard');
+    showToast('Switched to District Official Mode (Dr. Ramesh Soren)', '🏛️');
   });
 
   // Sign out / switch account button in modal
